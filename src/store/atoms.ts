@@ -39,3 +39,17 @@ export const contributionListState = atom<ResponseData>({
     },
   },
 });
+
+// コントリビューションの一週間のはじまりとおわりの日付
+export const chartContributionDateDuringState = atom<
+  string[]
+>({
+  key: 'chartContributionDateDuringState',
+  default: [],
+});
+
+// ユーザー毎の一週間ごとのコントリビューション数
+export const chartUserContributionState = atom<number[]>({
+  key: 'chartUserContributionState',
+  default: [],
+});
