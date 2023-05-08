@@ -1,6 +1,7 @@
 import { useContributions } from '@/hooks/useContributions';
 import { contributionListState } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 export default function Home() {
@@ -15,17 +16,40 @@ export default function Home() {
   };
   console.log(contributionList.user);
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div>
-      <button onClick={() => getData()}>取得</button>
       <div className={styles.container}>
         <div>
           <h3>yoshi-non</h3>
           <div>
-            {
-              contributionList.user.contributionsCollection
-                .contributionCalendar.totalContributions
-            }
+            <p>
+              年間コントリビューション数:
+              {
+                contributionList.user
+                  .contributionsCollection
+                  .contributionCalendar.totalContributions
+              }
+            </p>
+            {contributionList.user.contributionsCollection.contributionCalendar.weeks.map(
+              (week, index) => {
+                return (
+                  <p key={index}>
+                    スタート日:
+                    {week.contributionDays[0].date}
+                    <br />
+                    {week.contributionDays.reduce(
+                      (total, day) =>
+                        total + day.contributionCount,
+                      0
+                    )}
+                  </p>
+                );
+              }
+            )}
           </div>
         </div>
       </div>
