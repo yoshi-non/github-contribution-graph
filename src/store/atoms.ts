@@ -1,6 +1,41 @@
 import { atom } from 'recoil';
 
-// export const textState = atom<string>({
-//   key: 'textState', // unique ID (with respect to other atoms/selectors)
-//   default: 'Hello World!', // default value (aka initial value)
-// });
+interface Contribution {
+  contributionCount: number;
+  date: string;
+}
+
+interface Week {
+  contributionDays: Contribution[];
+}
+
+interface ContributionCalendar {
+  totalContributions: number;
+  weeks: Week[];
+}
+
+interface ContributionsCollection {
+  contributionCalendar: ContributionCalendar;
+}
+
+interface User {
+  contributionsCollection: ContributionsCollection;
+}
+
+interface ResponseData {
+  user: User;
+}
+
+export const contributionListState = atom<ResponseData>({
+  key: 'contributionListState',
+  default: {
+    user: {
+      contributionsCollection: {
+        contributionCalendar: {
+          totalContributions: 0,
+          weeks: [],
+        },
+      },
+    },
+  },
+});

@@ -1,25 +1,6 @@
 import { Octokit } from '@octokit/core';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Contributions = {
-  user: {
-    contributionsCollection: {
-      contributionCalendar: {
-        weeks: [
-          {
-            contributionDays: [
-              {
-                date: string;
-                contributionCount: number;
-              }
-            ];
-          }
-        ];
-      };
-    };
-  };
-};
-
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
@@ -48,12 +29,9 @@ export default async function handler(
   }
   `;
 
-  const contributions =
-    await octokit.graphql<Contributions>(query, {
-      userName,
-    });
-
-  return response.status(200).json({
-    values: contributions,
+  const contributions = await octokit.graphql(query, {
+    userName,
   });
+
+  return response.status(200).json(contributions);
 }
