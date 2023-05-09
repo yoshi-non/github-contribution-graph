@@ -2,8 +2,8 @@ import { useContributions } from '@/hooks/useContributions';
 import {
   chartContributionDateDuringState,
   chartDatasetState,
-  chartUserContributionListState,
   contributionListState,
+  dataset,
 } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect } from 'react';
@@ -42,109 +42,100 @@ export default function Home() {
     setChartContributionDateDuring,
   ] = useRecoilState(chartContributionDateDuringState);
 
-  // チャートに使用するユーザー毎のコントリビューション数(1週間毎)の配列
-  const [
-    chartUserContributionList,
-    setChartUserContributionList,
-  ] = useRecoilState(chartUserContributionListState);
-
   // データセット
   const [chartDataset, setChartDataset] = useRecoilState(
     chartDatasetState
   );
 
-  const getData = () => {
-    // 各ユーザーのコントリビューションを取得
-    const { getContributions } = useContributions();
-    githubUserList.map(async (user) => {
-      const GITHUB_USER = user.id;
-      const data = await getContributions(GITHUB_USER);
-      setContributionList((old) => [...old, data]);
-    });
+  const getData = async () => {
+    try {
+      const { getContributions } = useContributions();
+      const promises = githubUserList.map((user) =>
+        getContributions(user.id)
+      );
+      const data = await Promise.all(promises);
+      setContributionList(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
-  console.log(contributionList);
 
-  // const makeChartDataset = () => {
-  //   // チャートに使用するデータを整形して配列に格納
-  //   const dateDuring =
-  //     contributionList[0]?.user.contributionsCollection.contributionCalendar.weeks.map(
-  //       (week) => {
-  //         return `${week.contributionDays[0].date} ~ ${
-  //           week.contributionDays[
-  //             week.contributionDays.length - 1
-  //           ].date
-  //         }`;
-  //       }
-  //     );
-  //   setChartContributionDateDuring(dateDuring);
+  const makeChartDataset = () => {
+    // チャートに使用するデータを整形して配列に格納
+    const dateDuring =
+      contributionList[0]?.user.contributionsCollection.contributionCalendar.weeks.map(
+        (week) => {
+          return `${week.contributionDays[0].date} ~ ${
+            week.contributionDays[
+              week.contributionDays.length - 1
+            ].date
+          }`;
+        }
+      );
+    setChartContributionDateDuring(dateDuring);
 
-  //   // contributionListの要素が未定義の場合は何もしない
-  //   if (!contributionList[0]?.user) {
-  //     return;
-  //   }
-
-  //   // チャートに使用するデータを整形して配列に格納
-  //   const chartData = githubUserList.map((user, i) => {
-  //     const userContribution = contributionList[
-  //       i
-  //     ]?.user.contributionsCollection.contributionCalendar.weeks.map(
-  //       (week) => {
-  //         return week.contributionDays.reduce(
-  //           (total, day) => total + day.contributionCount,
-  //           0
-  //         );
-  //       }
-  //     );
-  //     return {
-  //       label: user.name,
-  //       data: userContribution,
-  //       borderColor: `rgb(${i * 30}, ${i * 30}, ${i * 20})`,
-  //       backgroundColor: `rgba(${i * 30}, ${i * 30}, ${
-  //         i * 20
-  //       }, 0.5)`,
-  //     };
-  //   });
-  //   setChartDataset(chartData);
-  // };
+    // チャートに使用するデータを整形して配列に格納
+    const chartData: dataset = githubUserList.map(
+      (user, i) => {
+        const userContribution = contributionList[
+          i
+        ]?.user.contributionsCollection.contributionCalendar.weeks.map(
+          (week) => {
+            return week.contributionDays.reduce(
+              (total, day) => total + day.contributionCount,
+              0
+            );
+          }
+        );
+        return {
+          label: user.name,
+          data: userContribution,
+          borderColor: `${user.color}`,
+          backgroundColor: `#ffffffff`,
+        };
+      }
+    );
+    setChartDataset(chartData);
+  };
 
   useEffect(() => {
     getData();
   }, []);
 
-  // useEffect(() => {
-  //   makeChartDataset();
-  // }, [contributionList]);
+  useEffect(() => {
+    makeChartDataset();
+  }, [contributionList]);
 
-  // const options = {
-  //   responsive: true,
-  //   plugins: {
-  //     title: {
-  //       display: true,
-  //       text: 'GitHub Contribution',
-  //     },
-  //   },
-  // };
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'GitHub Contribution',
+      },
+    },
+  };
 
-  // const graphData = {
-  //   labels: chartContributionDateDuring,
-  //   datasets: chartDataset,
-  // };
+  const graphData = {
+    labels: chartContributionDateDuring,
+    datasets: chartDataset,
+  };
 
   return (
     <div>
       <div className={styles.container}>
         <div className={styles.chartWrapper}>
-          {/* <Line data={graphData} options={options} /> */}
+          <Line data={graphData} options={options} />
         </div>
         <div>
           {githubUserList.map((user, index) => (
             <div key={index}>
               {user.name}:
-              {
-                contributionList[index]?.user
+              {contributionList &&
+                contributionList[index] &&
+                contributionList[index].user
                   .contributionsCollection
-                  .contributionCalendar.totalContributions
-              }
+                  .contributionCalendar.totalContributions}
             </div>
           ))}
         </div>

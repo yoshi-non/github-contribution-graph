@@ -7,9 +7,9 @@ export type ResponseData = {
         totalContributions: number;
         weeks: {
           contributionDays: {
-            contributionCount: number;
             date: string;
-          };
+            contributionCount: number;
+          }[];
         }[];
       };
     };
@@ -43,22 +43,16 @@ export const chartContributionDateDuringState = atom<
   default: [],
 });
 
-// ユーザー毎の一週間ごとのコントリビューション数
-export const chartUserContributionState = atom<number[]>({
-  key: 'chartUserContributionState',
-  default: [],
-});
-
 export const chartUserContributionListState = atom<
-  number[][]
+  number[]
 >({
   key: 'chartUserContributionListState',
   default: [],
 });
 
-type dataset = {
+export type dataset = {
   label: string;
-  data: number[];
+  data: (number | undefined)[];
   borderColor: string;
   backgroundColor: string;
 }[];
