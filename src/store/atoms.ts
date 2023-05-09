@@ -1,33 +1,23 @@
 import { atom } from 'recoil';
 
-interface Contribution {
-  contributionCount: number;
-  date: string;
-}
+export type ResponseData = {
+  user: {
+    contributionsCollection: {
+      contributionCalendar: {
+        totalContributions: number;
+        weeks: {
+          contributionDays: {
+            contributionCount: number;
+            date: string;
+          };
+        }[];
+      };
+    };
+  };
+};
 
-interface Week {
-  contributionDays: Contribution[];
-}
-
-interface ContributionCalendar {
-  totalContributions: number;
-  weeks: Week[];
-}
-
-interface ContributionsCollection {
-  contributionCalendar: ContributionCalendar;
-}
-
-interface User {
-  contributionsCollection: ContributionsCollection;
-}
-
-interface ResponseData {
-  user: User;
-}
-
-export const contributionListState = atom<ResponseData>({
-  key: 'contributionListState',
+export const contributionState = atom<ResponseData>({
+  key: 'contributionState',
   default: {
     user: {
       contributionsCollection: {
@@ -38,6 +28,11 @@ export const contributionListState = atom<ResponseData>({
       },
     },
   },
+});
+
+export const contributionListState = atom<ResponseData[]>({
+  key: 'contributionListState',
+  default: [],
 });
 
 // コントリビューションの一週間のはじまりとおわりの日付
@@ -51,5 +46,25 @@ export const chartContributionDateDuringState = atom<
 // ユーザー毎の一週間ごとのコントリビューション数
 export const chartUserContributionState = atom<number[]>({
   key: 'chartUserContributionState',
+  default: [],
+});
+
+export const chartUserContributionListState = atom<
+  number[][]
+>({
+  key: 'chartUserContributionListState',
+  default: [],
+});
+
+type dataset = {
+  label: string;
+  data: number[];
+  borderColor: string;
+  backgroundColor: string;
+}[];
+
+// グラフに渡すデータセット
+export const chartDatasetState = atom<dataset>({
+  key: 'chartDatasetState',
   default: [],
 });
