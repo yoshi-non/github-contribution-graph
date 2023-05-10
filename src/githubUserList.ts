@@ -39,4 +39,14 @@ export const githubUserList = [
     name: 'Aijkl',
     color: '#ffa500',
   },
+  {
+    id: 'NewNomad',
+    name: 'NewNomad',
+    color: '#000080',
+  },
+  {
+    id: 'mitsuYashi',
+    name: 'mitsuki',
+    color: '#9400d3',
+  },
 ];

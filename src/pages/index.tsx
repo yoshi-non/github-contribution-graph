@@ -20,6 +20,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { githubUserList } from '@/githubUserList';
+import AspectRatio from '@mui/joy/AspectRatio';
+import { CssVarsProvider } from '@mui/joy/styles';
 
 ChartJS.register(
   CategoryScale,
@@ -108,6 +110,8 @@ export default function Home() {
 
   const options = {
     responsive: true,
+    aspectRatio: 2,
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -124,9 +128,15 @@ export default function Home() {
   return (
     <div>
       <div className={styles.container}>
-        <div className={styles.chartWrapper}>
-          <Line data={graphData} options={options} />
-        </div>
+        <CssVarsProvider>
+          <AspectRatio
+            component="div"
+            variant="plain"
+            ratio="2/1"
+          >
+            <Line data={graphData} options={options} />
+          </AspectRatio>
+        </CssVarsProvider>
         <div>
           {githubUserList.map((user, index) => (
             <div key={index}>
