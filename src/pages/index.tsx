@@ -4,6 +4,7 @@ import {
   chartDatasetState,
   contributionListState,
   dataset,
+  gitHubUserListState,
 } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect } from 'react';
@@ -19,7 +20,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { githubUserList } from '@/githubUserList';
+import { defaultGithubUserList } from '@/githubUserList';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { Grid } from '@mui/material';
@@ -52,13 +53,39 @@ export default function Home() {
     chartDatasetState
   );
 
+  // GitHubユーザーのリスト
+  const [githubUserList, setGitHubUserList] =
+    useRecoilState(gitHubUserListState);
+
+  const getGithubUserList = async () => {
+    const newGithubUserList = [...githubUserList];
+    const promiseGithubUser = defaultGithubUserList.map(
+      (user) => {
+        return fetch(
+          `https://api.github.com/users/${user.id}`
+        ).then((response) => response.json());
+      }
+    );
+    const data = await Promise.all(promiseGithubUser);
+    data.forEach((user, index) => {
+      newGithubUserList[index] = {
+        // 各ユーザーオブジェクトのコピーに対してプロパティを更新
+        ...newGithubUserList[index],
+        name: user.name === null ? user.login : user.name,
+        avatarUrl: user.avatar_url,
+      };
+    });
+
+    setGitHubUserList(newGithubUserList);
+  };
+
   const getData = async () => {
     try {
       const { getContributions } = useContributions();
-      const promises = githubUserList.map((user) =>
-        getContributions(user.id)
+      const promiseContributions = githubUserList.map(
+        (user) => getContributions(user.id)
       );
-      const data = await Promise.all(promises);
+      const data = await Promise.all(promiseContributions);
       setContributionList(data);
     } catch (error) {
       console.error(error);
@@ -104,6 +131,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    getGithubUserList();
     getData();
   }, []);
 
@@ -156,9 +184,7 @@ export default function Home() {
                   <div className={styles.userWrapperLeft}>
                     <Image
                       className={styles.userIcon}
-                      src={
-                        'https://avatars.githubusercontent.com/u/83369665?v=4'
-                      }
+                      src={user.avatarUrl}
                       alt={user.name}
                       width={100}
                       height={100}

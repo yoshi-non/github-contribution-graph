@@ -1,3 +1,4 @@
+import { defaultGithubUserList } from '@/githubUserList';
 import { atom } from 'recoil';
 
 export type ResponseData = {
@@ -15,6 +16,19 @@ export type ResponseData = {
     };
   };
 };
+
+export type githubUserList = {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  allContributions: number;
+  color: string;
+}[];
+
+export const gitHubUserListState = atom<githubUserList>({
+  key: 'gitHubUserListState',
+  default: defaultGithubUserList,
+});
 
 export const contributionState = atom<ResponseData>({
   key: 'contributionState',
