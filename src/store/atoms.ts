@@ -15,7 +15,7 @@ export type ResponseData = {
       };
     };
   };
-};
+}[];
 
 export type githubUserList = {
   id: string;
@@ -30,21 +30,7 @@ export const gitHubUserListState = atom<githubUserList>({
   default: defaultGithubUserList,
 });
 
-export const contributionState = atom<ResponseData>({
-  key: 'contributionState',
-  default: {
-    user: {
-      contributionsCollection: {
-        contributionCalendar: {
-          totalContributions: 0,
-          weeks: [],
-        },
-      },
-    },
-  },
-});
-
-export const contributionListState = atom<ResponseData[]>({
+export const contributionListState = atom<ResponseData>({
   key: 'contributionListState',
   default: [],
 });

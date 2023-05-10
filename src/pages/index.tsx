@@ -1,5 +1,6 @@
 import { useContributions } from '@/hooks/useContributions';
 import {
+  ResponseData,
   chartContributionDateDuringState,
   chartDatasetState,
   contributionListState,
@@ -7,7 +8,7 @@ import {
   gitHubUserListState,
 } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   Chart as ChartJS,
@@ -58,38 +59,46 @@ export default function Home() {
     useRecoilState(gitHubUserListState);
 
   const getGithubUserList = async () => {
-    const newGithubUserList = [...githubUserList];
+    let newGithubUserList = [...githubUserList];
     const promiseGithubUser = defaultGithubUserList.map(
-      (user) => {
-        return fetch(
+      async (user) => {
+        const response = await fetch(
           `https://api.github.com/users/${user.id}`
-        ).then((response) => response.json());
+        );
+        return await response.json();
       }
     );
     const data = await Promise.all(promiseGithubUser);
-    data.forEach((user, index) => {
-      newGithubUserList[index] = {
-        // 各ユーザーオブジェクトのコピーに対してプロパティを更新
+    return data.map((user, index) => {
+      return {
         ...newGithubUserList[index],
         name: user.name === null ? user.login : user.name,
         avatarUrl: user.avatar_url,
       };
     });
-
-    setGitHubUserList(newGithubUserList);
   };
 
   const getData = async () => {
-    try {
-      const { getContributions } = useContributions();
-      const promiseContributions = githubUserList.map(
-        (user) => getContributions(user.id)
-      );
-      const data = await Promise.all(promiseContributions);
-      setContributionList(data);
-    } catch (error) {
-      console.error(error);
-    }
+    const { getContributions } = useContributions();
+    const promiseContributions = githubUserList.map(
+      (user) => getContributions(user.id)
+    );
+    const data = await Promise.all(promiseContributions);
+    return data as ResponseData;
+  };
+
+  const getCompleteGitHubUserList = async () => {
+    const users = getGithubUserList();
+    let newGithubUserList2 = [...(await users)];
+    contributionList.forEach((value, index) => {
+      newGithubUserList2[index] = {
+        ...newGithubUserList2[index],
+        allContributions:
+          value.user.contributionsCollection
+            .contributionCalendar.totalContributions,
+      };
+    });
+    setGitHubUserList(newGithubUserList2);
   };
 
   const makeChartDataset = () => {
@@ -130,14 +139,26 @@ export default function Home() {
     setChartDataset(chartData);
   };
 
+  const [
+    contributionListLoaded,
+    setContributionListLoaded,
+  ] = useState(false);
+
   useEffect(() => {
-    getGithubUserList();
-    getData();
+    async function getDataAsync() {
+      const newContributionList = await getData();
+      setContributionList(newContributionList);
+      setContributionListLoaded(true); // 状態を更新
+    }
+    getDataAsync();
   }, []);
 
   useEffect(() => {
-    makeChartDataset();
-  }, [contributionList]);
+    if (contributionListLoaded) {
+      getCompleteGitHubUserList();
+      makeChartDataset();
+    }
+  }, [contributionListLoaded]);
 
   const options = {
     responsive: true,
@@ -198,12 +219,7 @@ export default function Home() {
                       {user.id}
                     </p>
                     <p className={styles.userContribution}>
-                      {contributionList &&
-                        contributionList[index] &&
-                        contributionList[index].user
-                          .contributionsCollection
-                          .contributionCalendar
-                          .totalContributions}
+                      {user.allContributions}
                     </p>
                   </div>
                 </div>
