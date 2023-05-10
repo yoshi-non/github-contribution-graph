@@ -22,6 +22,9 @@ import { Line } from 'react-chartjs-2';
 import { githubUserList } from '@/githubUserList';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider } from '@mui/joy/styles';
+import { Grid } from '@mui/material';
+import Link from 'next/link';
+import Image from 'next/image';
 
 ChartJS.register(
   CategoryScale,
@@ -137,18 +140,51 @@ export default function Home() {
             <Line data={graphData} options={options} />
           </AspectRatio>
         </CssVarsProvider>
-        <div>
+        <Grid
+          className={styles.userList}
+          container
+          spacing={{ xs: 2, md: 4 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+        >
           {githubUserList.map((user, index) => (
-            <div key={index}>
-              {user.name}:
-              {contributionList &&
-                contributionList[index] &&
-                contributionList[index].user
-                  .contributionsCollection
-                  .contributionCalendar.totalContributions}
-            </div>
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <Link
+                href={`https://github.com/${user.id}`}
+                target="_blank"
+              >
+                <div className={styles.userWrapper}>
+                  <div className={styles.userWrapperLeft}>
+                    <Image
+                      className={styles.userIcon}
+                      src={
+                        'https://avatars.githubusercontent.com/u/83369665?v=4'
+                      }
+                      alt={user.name}
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                  <div className={styles.userWrapperRight}>
+                    <p className={styles.userName}>
+                      {user.name}
+                    </p>
+                    <p className={styles.userId}>
+                      {user.id}
+                    </p>
+                    <p className={styles.userContribution}>
+                      {contributionList &&
+                        contributionList[index] &&
+                        contributionList[index].user
+                          .contributionsCollection
+                          .contributionCalendar
+                          .totalContributions}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </Grid>
           ))}
-        </div>
+        </Grid>
       </div>
     </div>
   );
