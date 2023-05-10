@@ -8,7 +8,7 @@ import {
   gitHubUserListState,
 } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   Chart as ChartJS,
@@ -98,7 +98,10 @@ export default function Home() {
             .contributionCalendar.totalContributions,
       };
     });
-    setGitHubUserList(newGithubUserList2);
+    const sortedUserList = newGithubUserList2.sort(
+      (a, b) => b.allContributions - a.allContributions
+    );
+    setGitHubUserList(sortedUserList);
   };
 
   const makeChartDataset = () => {
@@ -129,7 +132,7 @@ export default function Home() {
           }
         );
         return {
-          label: user.name,
+          label: `${user.name}`,
           data: userContribution,
           borderColor: `${user.color}`,
           backgroundColor: `#ffffffff`,
@@ -148,7 +151,7 @@ export default function Home() {
     async function getDataAsync() {
       const newContributionList = await getData();
       setContributionList(newContributionList);
-      setContributionListLoaded(true); // 状態を更新
+      setContributionListLoaded(true);
     }
     getDataAsync();
   }, []);
@@ -176,6 +179,9 @@ export default function Home() {
     labels: chartContributionDateDuring,
     datasets: chartDataset,
   };
+  useEffect(() => {
+    console.log(contributionList);
+  }, [contributionList]);
 
   return (
     <div>
