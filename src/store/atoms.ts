@@ -1,7 +1,7 @@
-import { defaultGithubUserList } from '@/githubUserList';
+import { defaultGithubUsers } from '@/githubUsers';
 import { atom } from 'recoil';
 
-export type ResponseData = {
+export type ResponseContributionObject = {
   user: {
     contributionsCollection: {
       contributionCalendar: {
@@ -15,38 +15,25 @@ export type ResponseData = {
       };
     };
   };
-}[];
+};
 
-export type githubUserList = {
+export type githubUsers = {
   id: string;
-  name: string;
-  avatarUrl: string;
-  allContributions: number;
+  name?: string;
+  avatarUrl?: string;
+  contributionsCollection?: number[];
+  allContributions?: number;
   color: string;
 }[];
 
-export const gitHubUserListState = atom<githubUserList>({
-  key: 'gitHubUserListState',
-  default: defaultGithubUserList,
-});
-
-export const contributionListState = atom<ResponseData>({
-  key: 'contributionListState',
-  default: [],
+export const githubUsersState = atom<githubUsers>({
+  key: 'githubUsersState',
+  default: defaultGithubUsers,
 });
 
 // コントリビューションの一週間のはじまりとおわりの日付
-export const chartContributionDateDuringState = atom<
-  string[]
->({
-  key: 'chartContributionDateDuringState',
-  default: [],
-});
-
-export const chartUserContributionListState = atom<
-  number[]
->({
-  key: 'chartUserContributionListState',
+export const contributionDateDuringState = atom<string[]>({
+  key: 'contributionDateDuringState',
   default: [],
 });
 
@@ -58,7 +45,7 @@ export type dataset = {
 }[];
 
 // グラフに渡すデータセット
-export const chartDatasetState = atom<dataset>({
-  key: 'chartDatasetState',
+export const datasetState = atom<dataset>({
+  key: 'datasetState',
   default: [],
 });
