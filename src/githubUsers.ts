@@ -13,32 +13,42 @@ export const defaultGithubUsers = [
   },
   {
     id: 'bearkaito',
-    name: 'bearkaito',
     color: '#00ced1',
   },
   {
     id: 'd4n1938',
-    name: 'Lnida',
     color: '#006400',
   },
   {
     id: 'minntoko',
-    name: 'みんとこ',
     color: '#ffff00',
   },
   {
     id: 'aijkl',
-    name: 'Aijkl',
     color: '#ffa500',
   },
   {
     id: 'NewNomad',
-    name: 'NewNomad',
     color: '#000080',
   },
   {
     id: 'mitsuYashi',
-    name: 'mitsuki',
     color: '#9400d3',
+  },
+  {
+    id: 'TeppuSan',
+    color: '#008000',
+  },
+  {
+    id: 'emiminate',
+    color: '#008b8b',
+  },
+  {
+    id: 'yuta2001',
+    color: '#9400d3',
+  },
+  {
+    id: 'me990928',
+    color: '#6495ed',
   },
 ];
