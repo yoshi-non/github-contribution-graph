@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/context/auth';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
@@ -8,7 +9,9 @@ export default function App({
 }: AppProps) {
   return (
     <RecoilRoot>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </RecoilRoot>
   );
 }
