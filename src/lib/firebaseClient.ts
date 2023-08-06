@@ -24,7 +24,7 @@ if (!getApps().length) {
   initializeApp(firebaseConfig);
 }
 
-export const analytics = getAnalytics();
+// export const analytics = getAnalytics();
 export const strorage = getStorage();
 export const auth = getAuth();
 export const db = getFirestore();
