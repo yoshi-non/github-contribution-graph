@@ -1,11 +1,17 @@
 import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const styles = {
-  container: css``,
+  container: css`
+    display: flex;
+  `,
+  mainWrapper: css`
+    width: 100%;
+  `,
 };
 
 const ProjectList = () => {
@@ -21,6 +27,9 @@ const ProjectList = () => {
   return (
     <div css={styles.container}>
       <Sidebar />
+      <div css={styles.mainWrapper}>
+        <Topbar />
+      </div>
     </div>
   );
 };
