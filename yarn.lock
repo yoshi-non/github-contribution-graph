@@ -80,6 +80,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.22.6":
+  version: 7.22.10
+  resolution: "@babel/runtime@npm:7.22.10"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: d3a006fe2cbaf4048b935fb18f55d9ed52c26292182537b442cee57bf524dbb483367c57f464b1a5a96648d9d8d0fdcda848d58a8a09e18ed3f8971dcd684c6c
+  languageName: node
+  linkType: hard
+
 "@babel/types@npm:^7.21.4":
   version: 7.21.5
   resolution: "@babel/types@npm:7.21.5"
@@ -1022,6 +1031,22 @@ __metadata:
   version: 5.12.3
   resolution: "@mui/core-downloads-tracker@npm:5.12.3"
   checksum: 0172d83758dfa85e90687ffeaa8d95af9651f4a3e1ad20292b4b7f3985a228ae5041a584963607a6e0a197b29432aeae9f7511b938fcddd2336b90a280395afd
+  languageName: node
+  linkType: hard
+
+"@mui/icons-material@npm:^5.14.3":
+  version: 5.14.3
+  resolution: "@mui/icons-material@npm:5.14.3"
+  dependencies:
+    "@babel/runtime": "npm:^7.22.6"
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^17.0.0 || ^18.0.0
+    react: ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 34b8864288c4fea703376a8d05690dcb0dd76a8e6dd1fe6eb31317b3d6729cdadd3010b2ee995cca469b53399d4ef40b0d5de065df0e125a4ab3e84060809ae5
   languageName: node
   linkType: hard
 
@@ -3444,6 +3469,7 @@ __metadata:
   dependencies:
     "@emotion/react": "npm:^11.11.0"
     "@emotion/styled": "npm:^11.11.0"
+    "@mui/icons-material": "npm:^5.14.3"
     "@mui/joy": "npm:^5.0.0-alpha.78"
     "@mui/material": "npm:^5.12.3"
     "@octokit/core": "npm:^4.2.0"
@@ -5298,6 +5324,13 @@ __metadata:
   version: 0.13.11
   resolution: "regenerator-runtime@npm:0.13.11"
   checksum: 12b069dc774001fbb0014f6a28f11c09ebfe3c0d984d88c9bced77fdb6fedbacbca434d24da9ae9371bfbf23f754869307fb51a4c98a8b8b18e5ef748677ca24
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "regenerator-runtime@npm:0.14.0"
+  checksum: e25f062c1a183f81c99681691a342760e65c55e8d3a4d4fe347ebe72433b123754b942b70b622959894e11f8a9131dc549bd3c9a5234677db06a4af42add8d12
   languageName: node
   linkType: hard
 
