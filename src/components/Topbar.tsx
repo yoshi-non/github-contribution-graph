@@ -1,8 +1,8 @@
-import React from 'react';
 import { css } from '@emotion/react';
 import Image from 'next/image';
 import { useAuth } from '@/context/auth';
 import SearchIcon from '@mui/icons-material/Search';
+
 const styles = {
   container: css`
     display: flex;
@@ -10,6 +10,7 @@ const styles = {
     justify-content: space-between;
     height: 50px;
     border-bottom: 1px solid #ddd;
+    background-color: #fff;
   `,
   crrPathWrapper: css`
     font-size: 1rem;

@@ -8,6 +8,7 @@ const styles = {
     border-right: 1px solid #eaeaea;
     height: 100vh;
     position: sticky;
+    background-color: #fff;
   `,
   createButtonWrapper: css`
     width: 90%;
