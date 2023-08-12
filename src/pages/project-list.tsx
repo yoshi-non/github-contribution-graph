@@ -1,3 +1,4 @@
+import CreateProjectBox from '@/components/CreateProjectBox';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
@@ -29,6 +30,7 @@ const ProjectList = () => {
       <Sidebar />
       <div css={styles.mainWrapper}>
         <Topbar />
+        <CreateProjectBox />
       </div>
     </div>
   );
