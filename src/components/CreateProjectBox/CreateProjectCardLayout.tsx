@@ -26,12 +26,18 @@ const styles = {
 
 interface Props {
   children: ReactNode; // ReactNodeは任意のReact要素を表します
+  onClick: () => void;
 }
 
 const CreateProjectCardLayout: React.FC<Props> = ({
   children,
+  onClick,
 }) => {
-  return <button css={styles.container}>{children}</button>;
+  return (
+    <button css={styles.container} onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
 export default CreateProjectCardLayout;
