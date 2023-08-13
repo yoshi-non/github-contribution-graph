@@ -1,5 +1,18 @@
 import { css } from '@emotion/react';
 import Project from './ProjectBox/Project';
+import { useRecoilState } from 'recoil';
+import { fetchProjectsState } from '@/store/fetchProjectAtoms';
+import { useAuth } from '@/context/auth';
+import { use, useEffect, useState } from 'react';
+import { getProjectHandler } from '@/lib/firebase/getProjectHandler';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
+import { db } from '@/lib/firebaseClient';
+import { ProjectType } from '@/types/ProjectType';
 
 const styles = {
   container: css`
@@ -24,6 +37,35 @@ const styles = {
 };
 
 const ProjectBox = () => {
+  const [fetchProjects, setFetchProjects] = useState<
+    ProjectType[]
+  >([]);
+  const { fbUser } = useAuth();
+
+  useEffect(() => {
+    if (fbUser) {
+      const docRef = query(
+        collection(db, `projects`),
+        where('ownerId', '==', fbUser.uid)
+      );
+      getDocs(docRef).then((snapshot) => {
+        let results: ProjectType[] = [];
+
+        snapshot.docs.forEach((doc) => {
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          } as ProjectType);
+          setFetchProjects(results);
+        });
+      });
+    }
+  }, [fbUser]);
+
+  useEffect(() => {
+    console.log(fetchProjects);
+  }, [fetchProjects]);
+
   return (
     <div css={styles.container}>
       <div css={styles.showMethodNavbar}>
@@ -32,7 +74,9 @@ const ProjectBox = () => {
         </div>
       </div>
       <div css={styles.projects}>
-        <Project />
+        {fetchProjects.map((project) => (
+          <Project key={project.id} props={project} />
+        ))}
       </div>
     </div>
   );

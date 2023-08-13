@@ -19,12 +19,8 @@ export const createProjectHandler = async (
 ) => {
   try {
     const ref = doc(collection(db, 'projects'));
-    const id = ref.id;
 
-    await setDoc(ref, {
-      id,
-      ...project,
-    });
+    await setDoc(ref, project);
 
     console.log('Document successfully written!');
   } catch (error) {
