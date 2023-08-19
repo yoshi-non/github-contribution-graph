@@ -1,3 +1,4 @@
+import { ProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 
 const styles = {
@@ -40,16 +41,22 @@ const styles = {
   `,
 };
 
-const Project = () => {
+type Props = {
+  props: ProjectType;
+};
+
+const Project = ({ props }: Props) => {
   return (
     <div css={styles.container}>
       <div css={styles.titleWrapper}>
-        <h2 css={styles.projectName}>Project Name</h2>
-        <p css={styles.isPrivate}>Private</p>
+        <h2 css={styles.projectName}>{props.name}</h2>
+        <p css={styles.isPrivate}>
+          {props.isPublic ? 'Public' : 'Private'}
+        </p>
       </div>
       <p css={styles.kindWrapper}>
         <span css={styles.kindColor}></span>
-        <span css={styles.kindText}>Graph</span>
+        <span css={styles.kindText}>{props.kind}</span>
       </p>
     </div>
   );
