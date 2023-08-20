@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import Image from 'next/image';
 import { useAuth } from '@/context/auth';
 import SearchIcon from '@mui/icons-material/Search';
+import Link from 'next/link';
 
 const styles = {
   container: css`
@@ -17,6 +18,17 @@ const styles = {
     font-weight: bold;
     color: #333;
     margin-left: 1rem;
+  `,
+  homeLink: css`
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+      opacity: 0.8;
+    }
+  `,
+  crrProject: css`
+    margin-left: 0.5rem;
+    color: #a371f7;
   `,
   linkWrapper: css`
     display: flex;
@@ -61,12 +73,27 @@ const styles = {
   `,
 };
 
-const Topbar = () => {
+type Props = {
+  crrPath?: string;
+};
+
+const Topbar = ({ crrPath }: Props) => {
   const { fbUser } = useAuth();
   return (
     <div css={styles.container}>
       <div css={styles.crrPathWrapper}>
-        <p>MY FILES / The Beginning</p>
+        <p>
+          <Link href={'/project-list'}>
+            <span css={styles.homeLink}>MY FILES</span>
+          </Link>
+          {crrPath && (
+            <span>
+              {' '}
+              /{''}
+              <span css={styles.crrProject}>{crrPath}</span>
+            </span>
+          )}
+        </p>
       </div>
       <div css={styles.linkWrapper}>
         {fbUser?.photoURL && (

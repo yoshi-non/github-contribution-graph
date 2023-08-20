@@ -5,3 +5,8 @@ export const fetchProjectsState = atom<ProjectType[]>({
   key: 'fetchProjectsState',
   default: [],
 });
+
+export const fetchProjectState = atom<ProjectType | null>({
+  key: 'fetchProjectState',
+  default: null,
+});
