@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import Project from './ProjectBox/Project';
-import { useState } from 'react';
 import { ProjectType } from '@/types/ProjectType';
 import Link from 'next/link';
 import { fetchProjectsState } from '@/store/fetchProjectAtoms';
@@ -42,8 +41,11 @@ const ProjectBox = () => {
       </div>
       <div css={styles.projects}>
         {fetchProjects.map((project) => (
-          <Link href={`/project?id=${project.id}`}>
-            <Project key={project.id} props={project} />
+          <Link
+            href={`/project?id=${project.id}`}
+            key={project.id}
+          >
+            <Project props={project} />
           </Link>
         ))}
       </div>
