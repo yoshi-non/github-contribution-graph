@@ -6,6 +6,17 @@ import { useAuth } from '@/context/auth';
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { fetchProjectsState } from '@/store/fetchProjectAtoms';
+import { getProjectHandler } from '@/lib/firebase/getProjectHandler';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
+import { db } from '@/lib/firebaseClient';
+import { ProjectType } from '@/types/ProjectType';
 
 const styles = {
   container: css`
@@ -22,12 +33,39 @@ const styles = {
 const ProjectList = () => {
   const { fbUser, isLoading } = useAuth();
   const router = useRouter();
+  const [fetchProjects, setFetchProjects] = useRecoilState<
+    ProjectType[]
+  >(fetchProjectsState);
 
   useEffect(() => {
     if (!isLoading && !fbUser) {
       router.push('/');
     }
   }, [fbUser, isLoading, router]);
+
+  useEffect(() => {
+    if (fbUser) {
+      const docRef = query(
+        collection(db, `projects`),
+        where('ownerId', '==', fbUser.uid)
+      );
+
+      const fetchProjectsHandler = async () => {
+        const results: ProjectType[] = [];
+        const snapshot = await getDocs(docRef);
+
+        snapshot.docs.forEach((doc) => {
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          } as ProjectType);
+        });
+
+        setFetchProjects(results);
+      };
+      fetchProjectsHandler();
+    }
+  }, [fbUser]);
 
   return (
     <div css={styles.container}>
