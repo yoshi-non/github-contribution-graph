@@ -4,6 +4,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { db } from '../firebaseClient';
+import { useRouter } from 'next/router';
 
 type Project = {
   ownerId: string;
@@ -15,14 +16,13 @@ type Project = {
 };
 
 export const createProjectHandler = async (
-  project: Project
+  project: Project,
+  router: ReturnType<typeof useRouter>
 ) => {
   try {
     const ref = doc(collection(db, 'projects'));
-
     await setDoc(ref, project);
-
-    console.log('Document successfully written!');
+    await router.push(`/project?id=${ref.id}`);
   } catch (error) {
     console.error('Error writing document:', error);
   }

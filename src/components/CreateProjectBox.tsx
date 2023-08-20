@@ -3,6 +3,7 @@ import CreateProjectCardLayout from './CreateProjectBox/CreateProjectCardLayout'
 import InsightsIcon from '@mui/icons-material/Insights';
 import { createProjectHandler } from '@/lib/firebase/createProjectHandler';
 import { useAuth } from '@/context/auth';
+import { useRouter } from 'next/router';
 
 const styles = {
   container: css`
@@ -19,6 +20,7 @@ const styles = {
 
 const CreateProjectBox = () => {
   const { fbUser, isLoading } = useAuth();
+  const router = useRouter();
 
   // Project作成 (Graph)
   const createGraphProjectHandler = () => {
@@ -31,7 +33,7 @@ const CreateProjectBox = () => {
       invitePassword: '',
       expiration: null,
     };
-    createProjectHandler(project);
+    createProjectHandler(project, router);
   };
   return (
     <div css={styles.container}>
