@@ -3,6 +3,10 @@ import Image from 'next/image';
 import { useAuth } from '@/context/auth';
 import SearchIcon from '@mui/icons-material/Search';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebaseClient';
+import { useRouter } from 'next/router';
 
 const styles = {
   container: css`
@@ -18,7 +22,9 @@ const styles = {
     font-weight: bold;
     color: #333;
     margin-left: 1rem;
+    display: flex;
   `,
+
   homeLink: css`
     cursor: pointer;
     transition: all 0.2s;
@@ -26,9 +32,23 @@ const styles = {
       opacity: 0.8;
     }
   `,
-  crrProject: css`
-    margin-left: 0.5rem;
-    color: #a371f7;
+  projectNameInput: css`
+    color: #7d8590;
+    min-width: 100px;
+    max-width: 300px;
+    overflow: hidden;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    outline: 1px solid transparent;
+    &:hover {
+      outline: 1px solid #ddd;
+    }
+    &:focus {
+      outline: 1px solid #ddd;
+    }
   `,
   linkWrapper: css`
     display: flex;
@@ -79,21 +99,48 @@ type Props = {
 
 const Topbar = ({ crrPath }: Props) => {
   const { fbUser } = useAuth();
+  const router = useRouter();
+  const { id } = router.query;
+  const [projectName, setProjectName] = useState<
+    string | undefined
+  >(crrPath);
+
+  useEffect(() => {
+    if (!crrPath) return;
+    setProjectName(crrPath);
+  }, [fbUser, router, crrPath]);
+
+  const updateProjectName = async (
+    newProjectName: string
+  ) => {
+    if (!id) return;
+    if (!newProjectName || newProjectName == '') return;
+    const ref = doc(db, `projects/${id}`);
+    await updateDoc(ref, { name: newProjectName });
+  };
+
   return (
     <div css={styles.container}>
       <div css={styles.crrPathWrapper}>
-        <p>
-          <Link href={'/project-list'}>
-            <span css={styles.homeLink}>MY FILES</span>
-          </Link>
-          {crrPath && (
-            <span>
-              {' '}
-              /{''}
-              <span css={styles.crrProject}>{crrPath}</span>
-            </span>
-          )}
-        </p>
+        <Link href={'/project-list'}>
+          <p css={styles.homeLink}>MY FILES</p>
+        </Link>
+        {projectName && (
+          <div>
+            <span>&nbsp;/&nbsp;</span>
+            <input
+              css={styles.projectNameInput}
+              value={projectName ? projectName : crrPath}
+              onChange={(e) =>
+                setProjectName(e.target.value)
+              }
+              onBlur={(e) => {
+                updateProjectName(e.target.value);
+              }}
+              placeholder="プロジェクト名"
+            />
+          </div>
+        )}
       </div>
       <div css={styles.linkWrapper}>
         {fbUser?.photoURL && (
