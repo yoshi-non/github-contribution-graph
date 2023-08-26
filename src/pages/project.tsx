@@ -1,3 +1,5 @@
+import ProjectGraphCard from '@/components/ProjectGraphCard';
+import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
@@ -57,6 +59,8 @@ const Project = () => {
       <Sidebar />
       <div css={styles.mainWrapper}>
         <Topbar crrPath={fetchProject?.name} />
+        <ProjectGraphCard />
+        <ProjectShowUsersCard />
       </div>
     </div>
   );

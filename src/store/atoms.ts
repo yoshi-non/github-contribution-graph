@@ -1,4 +1,3 @@
-import { defaultGithubUsers } from '@/githubUsers';
 import { atom } from 'recoil';
 
 export type ResponseContributionObject = {
@@ -25,11 +24,6 @@ export type githubUsers = {
   allContributions?: number;
   color: string;
 }[];
-
-export const githubUsersState = atom<githubUsers>({
-  key: 'githubUsersState',
-  default: defaultGithubUsers,
-});
 
 // コントリビューションの一週間のはじまりとおわりの日付
 export const contributionDateDuringState = atom<string[]>({

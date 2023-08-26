@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { fetchProjectsState } from '@/store/fetchProjectAtoms';
-import { getProjectHandler } from '@/lib/firebase/getProjectHandler';
 import {
   collection,
   getDocs,
