@@ -3,7 +3,7 @@ import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
 import { db } from '@/lib/firebaseClient';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
-import { ProjectType } from '@/types/ProjectType';
+import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
@@ -40,15 +40,17 @@ const Project = () => {
 
   useEffect(() => {
     if (projectId) {
-      // projectIdと一致するプロジェクトを取得
       const ref = doc(db, `projects/${projectId}`);
-      onSnapshot(ref, (snap) => {
-        setFetchProject(snap.data() as ProjectType);
+      const unsubscribe = onSnapshot(ref, (snap) => {
+        if (snap.exists()) {
+          setFetchProject(snap.data() as NonIdProjectType);
+        }
       });
-    } else {
-      setFetchProject(null);
+      return () => {
+        unsubscribe();
+      };
     }
-  }, []);
+  }, [projectId, setFetchProject]);
 
   return (
     <div css={styles.container}>

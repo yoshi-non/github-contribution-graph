@@ -7,3 +7,5 @@ export type ProjectType = {
   name: string;
   ownerId: string;
 };
+
+export type NonIdProjectType = Omit<ProjectType, 'id'>;

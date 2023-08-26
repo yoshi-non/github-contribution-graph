@@ -1,4 +1,7 @@
-import { ProjectType } from '@/types/ProjectType';
+import {
+  NonIdProjectType,
+  ProjectType,
+} from '@/types/ProjectType';
 import { atom } from 'recoil';
 
 export const fetchProjectsState = atom<ProjectType[]>({
@@ -6,7 +9,8 @@ export const fetchProjectsState = atom<ProjectType[]>({
   default: [],
 });
 
-export const fetchProjectState = atom<ProjectType | null>({
-  key: 'fetchProjectState',
-  default: null,
-});
+export const fetchProjectState =
+  atom<NonIdProjectType | null>({
+    key: 'fetchProjectState',
+    default: null,
+  });
