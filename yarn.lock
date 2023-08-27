@@ -3501,6 +3501,7 @@ __metadata:
     firebase: "npm:^10.1.0"
     firebase-admin: "npm:^11.10.1"
     next: "npm:13.4.1"
+    next-intercept-stdout: "npm:^1.0.1"
     prettier: "npm:^2.8.8"
     react: "npm:18.2.0"
     react-chartjs-2: "npm:^5.2.0"
@@ -3882,6 +3883,15 @@ __metadata:
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
+  languageName: node
+  linkType: hard
+
+"intercept-stdout@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "intercept-stdout@npm:0.1.2"
+  dependencies:
+    lodash.toarray: "npm:^3.0.0"
+  checksum: 1dbe6186c66e3c16b1e10666869d1a219ae41a34ad3eb4d79462f0b27c9b3dfada4c245779c28f1d2abcddae9759ea38937197233288f2717caf6672f935252f
   languageName: node
   linkType: hard
 
@@ -4460,6 +4470,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash._arraycopy@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "lodash._arraycopy@npm:3.0.0"
+  checksum: 7e13fc0091c6e6b4e01d40f1905c46d0077839732d7f5a1dd5ba6ed8cefa5941457b150c788fce5158bf7ea576a06483da30a81bcd4ead2b7022744128f13aaa
+  languageName: node
+  linkType: hard
+
+"lodash._basevalues@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "lodash._basevalues@npm:3.0.0"
+  checksum: f9add9bbe5c75e532919ffcab53807e1111491a90d47a3192671343f221776156a0d1b42cd44241242a83478ebdb7a2133b485a74b4664c54de5afb48f2d4a79
+  languageName: node
+  linkType: hard
+
+"lodash._getnative@npm:^3.0.0":
+  version: 3.9.1
+  resolution: "lodash._getnative@npm:3.9.1"
+  checksum: 858cff25fc52353a1e39f44ff87fc1e1e8a85da513818f0caebe50c2795cf5cbce9d71a3e91ec0972bee3b174a74d697a38c6bb16d0b416dcc32322ae152a104
+  languageName: node
+  linkType: hard
+
 "lodash.camelcase@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
@@ -4474,10 +4505,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.isarguments@npm:^3.0.0":
+  version: 3.1.0
+  resolution: "lodash.isarguments@npm:3.1.0"
+  checksum: 5e8f95ba10975900a3920fb039a3f89a5a79359a1b5565e4e5b4310ed6ebe64011e31d402e34f577eca983a1fc01ff86c926e3cbe602e1ddfc858fdd353e62d8
+  languageName: node
+  linkType: hard
+
+"lodash.isarray@npm:^3.0.0":
+  version: 3.0.4
+  resolution: "lodash.isarray@npm:3.0.4"
+  checksum: c6daf1a1e450f20b1426595dc33cfe415d68c1267d3d081253e77430972865ee8d0ab98d777afb448350c677999802d43a7690eb16986e64b8450efc31e5667d
+  languageName: node
+  linkType: hard
+
+"lodash.keys@npm:^3.0.0":
+  version: 3.1.2
+  resolution: "lodash.keys@npm:3.1.2"
+  dependencies:
+    lodash._getnative: "npm:^3.0.0"
+    lodash.isarguments: "npm:^3.0.0"
+    lodash.isarray: "npm:^3.0.0"
+  checksum: ac4c70f0ac158d282ca0097a8ac8e2e433f6d727635ee53b11585ce30c0bc264e7eb0ac6155aad69715f1ab73dd8d00322769d79120afd40adaa383f9bee705a
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: 402fa16a1edd7538de5b5903a90228aa48eb5533986ba7fa26606a49db2572bf414ff73a2c9f5d5fd36b31c46a5d5c7e1527749c07cbcf965ccff5fbdf32c506
+  languageName: node
+  linkType: hard
+
+"lodash.toarray@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "lodash.toarray@npm:3.0.2"
+  dependencies:
+    lodash._arraycopy: "npm:^3.0.0"
+    lodash._basevalues: "npm:^3.0.0"
+    lodash.keys: "npm:^3.0.0"
+  checksum: ebff0a0961d839dcec944a7b9eba65f305e0d416be07c2e7469c5c74fe35c88487ad5c86d094172334ceb78f9200f711a711418e452610b1e8566f670a20ee48
   languageName: node
   linkType: hard
 
@@ -4723,6 +4790,15 @@ __metadata:
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
   checksum: f5f9a7974bfb28a91afafa254b197f0f22c684d4a1731763dda960d2c8e375b36c7d690e0d9dc8fba774c537af14a7e979129bca23d88d052fbeb9466955e447
+  languageName: node
+  linkType: hard
+
+"next-intercept-stdout@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "next-intercept-stdout@npm:1.0.1"
+  dependencies:
+    intercept-stdout: "npm:^0.1.2"
+  checksum: e263c174b56fb0e5cceb731f1259c2e67e3afaecbca9b86a1135fcbf90f71903ac61819e32c3eb066ea57ea5bfc5f7eeeb6ca6c05634d242d0fc58492c0f1941
   languageName: node
   linkType: hard
 
