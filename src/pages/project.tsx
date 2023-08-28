@@ -3,10 +3,13 @@ import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
+import { useGithubUsers } from '@/hooks/useGithubUsers';
 import { getShowUsersHandler } from '@/lib/firebase/getShowUsersHandler';
 import { db } from '@/lib/firebaseClient';
+import { githubUsers } from '@/store/atoms';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
+import { githubUsersState } from '@/store/githubUsersAtom';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -44,6 +47,9 @@ const Project = () => {
   const [fetchShowUsers, setFetchShowUsers] =
     useRecoilState(fetchShowUsersState);
 
+  const [githubUserList, setGitHubUserList] =
+    useRecoilState<githubUsers>(githubUsersState);
+
   useEffect(() => {
     if (typeof projectId === 'string') {
       const ref = doc(db, `projects/${projectId}`);
@@ -70,6 +76,19 @@ const Project = () => {
     }
   }, [projectId, setFetchProject]);
 
+  useEffect(() => {
+    if (!fetchShowUsers) return;
+    const asyncData = async () => {
+      const showUsers = fetchShowUsers;
+      const fetchGithubUsers = (await useGithubUsers(
+        showUsers
+      )) as githubUsers;
+      setGitHubUserList(fetchGithubUsers);
+      // setDatasets(useDatasets(fetchGithubUsers));
+      // setContributionDateDuring(await useDateDuring());
+    };
+    asyncData();
+  }, [fetchShowUsers]);
   return (
     <div css={styles.container}>
       <Sidebar />
