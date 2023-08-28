@@ -5,15 +5,10 @@ import {
 } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import { db } from '../firebaseClient';
-
-type ShowUser = {
-  projectId: string;
-  githubUserId: string;
-  color: string;
-};
+import { NonIdShowUserType } from '@/types/ShowUserType';
 
 export const createShowUserHandler = async (
-  showUser: ShowUser,
+  showUser: NonIdShowUserType,
   router: ReturnType<typeof useRouter>
 ) => {
   try {

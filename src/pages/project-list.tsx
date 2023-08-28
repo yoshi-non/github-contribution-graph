@@ -6,16 +6,10 @@ import { useAuth } from '@/context/auth';
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { fetchProjectsState } from '@/store/fetchProjectAtoms';
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db } from '@/lib/firebaseClient';
+import { getProjectHandler } from '@/lib/firebase/getProjectHandler';
 import { ProjectType } from '@/types/ProjectType';
+import { fetchProjectsState } from '@/store/fetchProjectAtoms';
+import { useRecoilState } from 'recoil';
 
 const styles = {
   container: css`
@@ -44,25 +38,19 @@ const ProjectList = () => {
 
   useEffect(() => {
     if (fbUser) {
-      const docRef = query(
-        collection(db, `projects`),
-        where('ownerId', '==', fbUser.uid)
-      );
-
-      const fetchProjectsHandler = async () => {
-        const results: ProjectType[] = [];
-        const snapshot = await getDocs(docRef);
-
-        snapshot.docs.forEach((doc) => {
-          results.push({
-            id: doc.id,
-            ...doc.data(),
-          } as ProjectType);
-        });
-
-        setFetchProjects(results);
+      const fetchProjectsAsync = async () => {
+        try {
+          const results = await getProjectHandler(
+            fbUser.uid
+          );
+          if (results) {
+            setFetchProjects(results);
+          }
+        } catch (error) {
+          console.log('Error fetching projects:', error);
+        }
       };
-      fetchProjectsHandler();
+      fetchProjectsAsync();
     }
   }, [fbUser]);
 
