@@ -5,27 +5,26 @@ import {
   where,
 } from 'firebase/firestore';
 import { db } from '../firebaseClient';
-import { ProjectType } from '@/types/ProjectType';
+import { ShowUserType } from '@/types/ShowUserType';
 
-export const getProjectHandler = async (userId: string) => {
+export const getShowUsersHandler = (projectId: string) => {
   try {
-    const results: ProjectType[] = [];
     const docRef = query(
-      collection(db, `projects`),
-      where('ownerId', '==', userId)
+      collection(db, `showUsers`),
+      where('projectId', '==', projectId)
     );
-
-    const fetchProjectsHandler = async () => {
+    const fetchShowUsersHandler = async () => {
+      const results: ShowUserType[] = [];
       const snapshot = await getDocs(docRef);
       snapshot.docs.forEach((doc) => {
         results.push({
           id: doc.id,
           ...doc.data(),
-        } as ProjectType);
+        } as ShowUserType);
       });
+      return results;
     };
-    await fetchProjectsHandler();
-    return results;
+    return fetchShowUsersHandler();
   } catch (error) {
     console.log('Error getting document:', error);
   }

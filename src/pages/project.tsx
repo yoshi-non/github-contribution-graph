@@ -3,8 +3,10 @@ import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
+import { getShowUsersHandler } from '@/lib/firebase/getShowUsersHandler';
 import { db } from '@/lib/firebaseClient';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
+import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -39,15 +41,29 @@ const Project = () => {
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
+  const [fetchShowUsers, setFetchShowUsers] =
+    useRecoilState(fetchShowUsersState);
 
   useEffect(() => {
-    if (projectId) {
+    if (typeof projectId === 'string') {
       const ref = doc(db, `projects/${projectId}`);
       const unsubscribe = onSnapshot(ref, (snap) => {
         if (snap.exists()) {
           setFetchProject(snap.data() as NonIdProjectType);
         }
       });
+      const fetchShowUsersAsync = async () => {
+        try {
+          const results = await getShowUsersHandler(
+            projectId
+          );
+          if (!results) return;
+          setFetchShowUsers(results);
+        } catch (error) {
+          console.log('Error fetching projects:', error);
+        }
+      };
+      fetchShowUsersAsync();
       return () => {
         unsubscribe();
       };

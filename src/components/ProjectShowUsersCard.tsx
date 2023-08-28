@@ -3,7 +3,7 @@ import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/auth';
 import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
+import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 
 const styles = {
   container: css`
@@ -175,7 +176,6 @@ const styles = {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: red;
     border: 1px solid #ddd;
     transition: all 0.2s;
     &:hover {
@@ -202,15 +202,17 @@ const ProjectShowUsersCard = () => {
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
-  const [githubUserId, setGithubUserId] =
-    useState<string>('');
+  const [fetchShowUsers, setFetchShowUsers] =
+    useRecoilState(fetchShowUsersState);
+
+  const [githubId, setGithubId] = useState<string>('');
   const addMemberHandler = () => {
     if (!fbUser) return;
     if (id === undefined) return;
-    if (githubUserId === '') return;
+    if (githubId === '') return;
     const showUser = {
       projectId: id as string,
-      githubUserId: githubUserId,
+      githubId: githubId,
       color: '#fff',
     };
     createShowUserHandler(showUser, router);
@@ -219,7 +221,7 @@ const ProjectShowUsersCard = () => {
 
   const closeAddMemberModal = () => {
     setAddMemberModalIsOpen(false);
-    setGithubUserId('');
+    setGithubId('');
   };
 
   return (
@@ -262,9 +264,9 @@ const ProjectShowUsersCard = () => {
                   placeholder="GitHub User Id"
                   type="text"
                   onChange={(e) =>
-                    setGithubUserId(e.target.value)
+                    setGithubId(e.target.value)
                   }
-                  value={githubUserId}
+                  value={githubId}
                 />
                 <button
                   css={styles.addMemberButton}
@@ -287,30 +289,42 @@ const ProjectShowUsersCard = () => {
         <div css={styles.memberHead}>
           <span>Members</span>
         </div>
-        <div css={styles.memberBody}>
-          <div css={styles.userInfo}>
-            <Image
-              src={
-                'https://avatars.githubusercontent.com/u/83369665?s=96&v=4'
-              }
-              alt={'github user icon'}
-              height={48}
-              width={48}
-            />
-            <div>
-              <Link href={'/'} css={styles.githubUserLink}>
-                Kagari
-              </Link>
-              <p css={styles.githubUserName}>yoshi-non</p>
+        {fetchShowUsers?.map((showUser) => (
+          <div css={styles.memberBody} key={showUser.id}>
+            <div css={styles.userInfo}>
+              <Image
+                src={
+                  'https://avatars.githubusercontent.com/u/83369665?s=96&v=4'
+                }
+                alt={'github user icon'}
+                height={48}
+                width={48}
+              />
+              <div>
+                <Link
+                  href={'/'}
+                  css={styles.githubUserLink}
+                >
+                  {showUser.githubId}
+                </Link>
+                <p css={styles.githubUserName}>
+                  {showUser.githubId}
+                </p>
+              </div>
+            </div>
+            <div css={styles.memberSettingButtonBox}>
+              <button
+                css={[
+                  styles.changeColorButton,
+                  { backgroundColor: showUser.color },
+                ]}
+              ></button>
+              <button css={styles.deleteButton}>
+                <DeleteForeverIcon />
+              </button>
             </div>
           </div>
-          <div css={styles.memberSettingButtonBox}>
-            <button css={styles.changeColorButton}></button>
-            <button css={styles.deleteButton}>
-              <DeleteForeverIcon />
-            </button>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
