@@ -22,6 +22,7 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import { useDatasets } from '@/hooks/useDatasets';
 import { useGithubUsers } from '@/hooks/useGithubUsers';
 import { useDateDuring } from '@/hooks/useDateDuring';
+import { defaultGithubUsers } from '@/githubUsers';
 
 ChartJS.register(
   CategoryScale,
@@ -47,10 +48,13 @@ const ContributionGraph = () => {
   const [githubUserList, setGitHubUserList] =
     useState<githubUsers>([]);
 
+  const showUsers = defaultGithubUsers;
+
   useEffect(() => {
     const asyncData = async () => {
-      const fetchGithubUsers =
-        (await useGithubUsers()) as githubUsers;
+      const fetchGithubUsers = (await useGithubUsers(
+        showUsers
+      )) as githubUsers;
       setGitHubUserList(fetchGithubUsers);
       setDatasets(useDatasets(fetchGithubUsers));
       setContributionDateDuring(await useDateDuring());

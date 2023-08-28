@@ -3,7 +3,7 @@ import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
 import CloseIcon from '@mui/icons-material/Close';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
@@ -12,6 +12,8 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/context/auth';
 import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
+import { githubUsers } from '@/store/atoms';
+import { githubUsersState } from '@/store/githubUsersAtom';
 
 const styles = {
   container: css`
@@ -204,6 +206,8 @@ const ProjectShowUsersCard = () => {
   );
   const [fetchShowUsers, setFetchShowUsers] =
     useRecoilState(fetchShowUsersState);
+  const [githubUserList, setGitHubUserList] =
+    useRecoilState<githubUsers>(githubUsersState);
 
   const [githubId, setGithubId] = useState<string>('');
   const addMemberHandler = () => {
@@ -294,7 +298,10 @@ const ProjectShowUsersCard = () => {
             <div css={styles.userInfo}>
               <Image
                 src={
-                  'https://avatars.githubusercontent.com/u/83369665?s=96&v=4'
+                  githubUserList.find(
+                    (user) => user.id == showUser.githubId
+                  )?.avatarUrl ||
+                  '/images/defaultUserIcon.png'
                 }
                 alt={'github user icon'}
                 height={48}
@@ -302,10 +309,12 @@ const ProjectShowUsersCard = () => {
               />
               <div>
                 <Link
-                  href={'/'}
+                  href={`https://github.com/${showUser.githubId}`}
                   css={styles.githubUserLink}
                 >
-                  {showUser.githubId}
+                  {githubUserList.find(
+                    (user) => user.id == showUser.githubId
+                  )?.name || showUser.githubId}
                 </Link>
                 <p css={styles.githubUserName}>
                   {showUser.githubId}

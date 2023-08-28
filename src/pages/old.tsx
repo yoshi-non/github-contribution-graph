@@ -25,6 +25,7 @@ import Image from 'next/image';
 import { useDatasets } from '@/hooks/useDatasets';
 import { useGithubUsers } from '@/hooks/useGithubUsers';
 import { useDateDuring } from '@/hooks/useDateDuring';
+import { defaultGithubUsers } from '@/githubUsers';
 
 ChartJS.register(
   CategoryScale,
@@ -51,10 +52,13 @@ export default function Old() {
   const [githubUserList, setGitHubUserList] =
     useState<githubUsers>([]);
 
+  const showUsers = defaultGithubUsers;
+
   useEffect(() => {
     const asyncData = async () => {
-      const fetchGithubUsers =
-        (await useGithubUsers()) as githubUsers;
+      const fetchGithubUsers = (await useGithubUsers(
+        showUsers
+      )) as githubUsers;
       setGitHubUserList(fetchGithubUsers);
       setDatasets(useDatasets(fetchGithubUsers));
       setContributionDateDuring(await useDateDuring());
