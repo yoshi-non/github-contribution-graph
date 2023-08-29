@@ -14,6 +14,8 @@ import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import { githubUsers } from '@/store/atoms';
 import { githubUsersState } from '@/store/githubUsersAtom';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db } from '@/lib/firebaseClient';
 
 const styles = {
   container: css`
@@ -228,6 +230,11 @@ const ProjectShowUsersCard = () => {
     setGithubId('');
   };
 
+  const deleteShowUser = async (showUserId: string) => {
+    const ref = doc(db, `showUsers/${showUserId}`);
+    await deleteDoc(ref);
+  };
+
   return (
     <div css={styles.container}>
       <div css={styles.topbar}>
@@ -328,7 +335,10 @@ const ProjectShowUsersCard = () => {
                   { backgroundColor: showUser.color },
                 ]}
               ></button>
-              <button css={styles.deleteButton}>
+              <button
+                css={styles.deleteButton}
+                onClick={() => deleteShowUser(showUser.id)}
+              >
                 <DeleteForeverIcon />
               </button>
             </div>
