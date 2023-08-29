@@ -89,6 +89,7 @@ const Project = () => {
     };
     asyncData();
   }, [fetchShowUsers]);
+
   return (
     <div css={styles.container}>
       <Sidebar />
