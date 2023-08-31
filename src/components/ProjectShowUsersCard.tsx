@@ -10,6 +10,8 @@ import { useAuth } from '@/context/auth';
 import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import ShowUser from './ProjectShowUsersCard/ShowUser';
+import { ShowUserType } from '@/types/ShowUserType';
+import { memberCountState } from '@/store/memberCountAtoms';
 
 const styles = {
   container: css`
@@ -147,7 +149,10 @@ const ProjectShowUsersCard = () => {
     fetchProjectState
   );
   const [fetchShowUsers, setFetchShowUsers] =
-    useRecoilState(fetchShowUsersState);
+    useRecoilState<ShowUserType[]>(fetchShowUsersState);
+
+  const [memberCount, setMemberCount] =
+    useRecoilState<number>(memberCountState);
 
   const [githubId, setGithubId] = useState<string>('');
   const addMemberHandler = () => {
@@ -160,6 +165,7 @@ const ProjectShowUsersCard = () => {
       color: '#fff',
     };
     createShowUserHandler(showUser, router);
+    setMemberCount(memberCount + 1);
     setAddMemberModalIsOpen(false);
   };
 

@@ -4,7 +4,7 @@ import {
   githubUsers,
 } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import {
   Chart as ChartJS,
@@ -20,9 +20,8 @@ import { Line } from 'react-chartjs-2';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { useDatasets } from '@/hooks/useDatasets';
-import { useGithubUsers } from '@/hooks/useGithubUsers';
 import { useDateDuring } from '@/hooks/useDateDuring';
-import { defaultGithubUsers } from '@/githubUsers';
+import { githubUsersState } from '@/store/githubUsersAtom';
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +34,9 @@ ChartJS.register(
 );
 
 const ContributionGraph = () => {
+  const [githubUserList, setGitHubUserList] =
+    useRecoilState<githubUsers>(githubUsersState);
+
   const [
     contributionDateDuring,
     setContributionDateDuring,
@@ -44,23 +46,14 @@ const ContributionGraph = () => {
   const [datasets, setDatasets] =
     useRecoilState(datasetState);
 
-  // GitHubユーザーのリスト
-  const [githubUserList, setGitHubUserList] =
-    useState<githubUsers>([]);
-
-  const showUsers = defaultGithubUsers;
-
   useEffect(() => {
     const asyncData = async () => {
-      const fetchGithubUsers = (await useGithubUsers(
-        showUsers
-      )) as githubUsers;
-      setGitHubUserList(fetchGithubUsers);
-      setDatasets(useDatasets(fetchGithubUsers));
+      if (githubUserList.length === 0) return;
+      setDatasets(useDatasets(githubUserList));
       setContributionDateDuring(await useDateDuring());
     };
     asyncData();
-  }, []);
+  }, [githubUserList]);
 
   const options = {
     responsive: true,

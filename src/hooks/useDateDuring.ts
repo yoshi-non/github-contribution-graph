@@ -1,9 +1,8 @@
-import { defaultGithubUsers } from '@/githubUsers';
 import { ResponseContributionObject } from '@/store/atoms';
 
 export const useDateDuring = async () => {
   const response = (await fetch(
-    `/api/contributions/${defaultGithubUsers[0].id}`
+    `/api/contributions/yoshi-non`
   ).then((res) =>
     res.json()
   )) as ResponseContributionObject;
