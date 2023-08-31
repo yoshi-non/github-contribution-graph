@@ -5,9 +5,9 @@ const styles = {
   container: css`
     width: 300px;
     border-right: 1px solid #eaeaea;
-    height: 100vh;
-    position: sticky;
+    height: 100%;
     background-color: #fff;
+    overflow: hidden;
   `,
   createButtonWrapper: css`
     width: 90%;

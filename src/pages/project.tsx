@@ -27,6 +27,9 @@ const styles = {
     background-color: rgb(237, 241, 245);
   `,
   topContent: css`
+    position: sticky;
+    z-index: 100;
+    top: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -38,9 +41,12 @@ const styles = {
   mainWrapper: css`
     width: 100%;
     display: flex;
+    height: calc(100vh - 50px);
+    overflow: hidden;
   `,
   projectWrapper: css`
     width: 100%;
+    overflow-y: scroll;
   `,
 };
 
