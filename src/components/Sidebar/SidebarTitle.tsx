@@ -9,17 +9,18 @@ const styles = {
     display: flex;
     align-items: center;
     font-size: 1.1rem;
-    gap: 0.5rem;
-    overflow: hidden;
+    overflow-x: hidden;
+    border-bottom: 1px solid #ddd;
   `,
   iconButton: css`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    min-width: 50px;
     height: 50px;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
     cursor: pointer;
     transition: 0.3s;
     &:hover {
@@ -36,12 +37,11 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 250px;
     height: 50px;
-    padding: 0 1rem;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
   `,
 };
 
@@ -64,9 +64,11 @@ const SidebarTitle = () => {
           css={styles.isOpenIcon}
         />
       </button>
-      <p css={styles.userName}>
-        {fbUser?.displayName}'s Workspace
-      </p>
+      {isOpenSidebar && (
+        <p css={styles.userName}>
+          {fbUser?.displayName}'s Workspace
+        </p>
+      )}
     </div>
   );
 };

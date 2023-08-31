@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 
 const styles = {
   container: css`
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
