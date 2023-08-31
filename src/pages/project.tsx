@@ -1,6 +1,7 @@
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
 import Sidebar from '@/components/Sidebar';
+import SidebarTitle from '@/components/Sidebar/SidebarTitle';
 import Topbar from '@/components/Topbar';
 import { useAuth } from '@/context/auth';
 import { useGithubUsers } from '@/hooks/useGithubUsers';
@@ -11,6 +12,7 @@ import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import { githubUsersState } from '@/store/githubUsersAtom';
 import { memberCountState } from '@/store/memberCountAtoms';
+import { isOpenSidebarState } from '@/store/sidebarAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -20,17 +22,33 @@ import { useRecoilState } from 'recoil';
 
 const styles = {
   container: css`
-    display: flex;
     width: 100%;
     height: 100vh;
     background-color: rgb(237, 241, 245);
   `,
+  topContent: css`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  `,
   mainWrapper: css`
+    width: 100%;
+    display: flex;
+  `,
+  projectWrapper: css`
     width: 100%;
   `,
 };
 
 const Project = () => {
+  const [isOpenSidebar, setIsOpenSidebar] = useRecoilState(
+    isOpenSidebarState
+  );
+
   const { fbUser, isLoading } = useAuth();
   const router = useRouter();
 
@@ -94,11 +112,16 @@ const Project = () => {
 
   return (
     <div css={styles.container}>
-      <Sidebar />
-      <div css={styles.mainWrapper}>
+      <div css={styles.topContent}>
+        <SidebarTitle />
         <Topbar crrPath={fetchProject?.name} />
-        <ProjectGraphCard />
-        <ProjectShowUsersCard />
+      </div>
+      <div css={styles.mainWrapper}>
+        {isOpenSidebar && <Sidebar />}
+        <div css={styles.projectWrapper}>
+          <ProjectGraphCard />
+          <ProjectShowUsersCard />
+        </div>
       </div>
     </div>
   );

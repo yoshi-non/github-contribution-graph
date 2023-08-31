@@ -10,15 +10,29 @@ import { getProjectHandler } from '@/lib/firebase/getProjectHandler';
 import { ProjectType } from '@/types/ProjectType';
 import { fetchProjectsState } from '@/store/fetchProjectAtoms';
 import { useRecoilState } from 'recoil';
+import SidebarTitle from '@/components/Sidebar/SidebarTitle';
+import { isOpenSidebarState } from '@/store/sidebarAtoms';
 
 const styles = {
   container: css`
-    display: flex;
     width: 100%;
     height: 100vh;
     background-color: rgb(237, 241, 245);
   `,
+  topContent: css`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  `,
   mainWrapper: css`
+    width: 100%;
+    display: flex;
+  `,
+  projectWrapper: css`
     width: 100%;
   `,
 };
@@ -29,6 +43,10 @@ const ProjectList = () => {
   const [fetchProjects, setFetchProjects] = useRecoilState<
     ProjectType[]
   >(fetchProjectsState);
+
+  const [isOpenSidebar, setIsOpenSidebar] = useRecoilState(
+    isOpenSidebarState
+  );
 
   useEffect(() => {
     if (!isLoading && !fbUser) {
@@ -56,11 +74,16 @@ const ProjectList = () => {
 
   return (
     <div css={styles.container}>
-      <Sidebar />
-      <div css={styles.mainWrapper}>
+      <div css={styles.topContent}>
+        <SidebarTitle />
         <Topbar />
-        <CreateProjectBox />
-        <ProjectBox />
+      </div>
+      <div css={styles.mainWrapper}>
+        {isOpenSidebar && <Sidebar />}
+        <div css={styles.projectWrapper}>
+          <CreateProjectBox />
+          <ProjectBox />
+        </div>
       </div>
     </div>
   );

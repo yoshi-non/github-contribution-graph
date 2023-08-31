@@ -1,10 +1,9 @@
 import CreateProjectButton from './Sidebar/CreateProjectButton';
-import SidebarTitle from './Sidebar/SidebarTitle';
 import { css } from '@emotion/react';
 
 const styles = {
   container: css`
-    max-width: 17rem;
+    width: 300px;
     border-right: 1px solid #eaeaea;
     height: 100vh;
     position: sticky;
@@ -19,13 +18,8 @@ const styles = {
 const Sidebar = () => {
   return (
     <div css={styles.container}>
-      <div>
-        <div>
-          <SidebarTitle />
-          <div css={styles.createButtonWrapper}>
-            <CreateProjectButton />
-          </div>
-        </div>
+      <div css={styles.createButtonWrapper}>
+        <CreateProjectButton />
       </div>
     </div>
   );
