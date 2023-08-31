@@ -10,6 +10,7 @@ import { githubUsers } from '@/store/atoms';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import { githubUsersState } from '@/store/githubUsersAtom';
+import { memberCountState } from '@/store/memberCountAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -50,8 +51,12 @@ const Project = () => {
   const [githubUserList, setGitHubUserList] =
     useRecoilState<githubUsers>(githubUsersState);
 
+  const [memberCount, setMemberCount] =
+    useRecoilState<number>(memberCountState);
+
   useEffect(() => {
     if (typeof projectId === 'string') {
+      setFetchShowUsers([]);
       const ref = doc(db, `projects/${projectId}`);
       const unsubscribe = onSnapshot(ref, (snap) => {
         if (snap.exists()) {
@@ -74,18 +79,15 @@ const Project = () => {
         unsubscribe();
       };
     }
-  }, [projectId, setFetchProject]);
+  }, [projectId, setFetchProject, memberCount]);
 
   useEffect(() => {
     if (!fetchShowUsers) return;
     const asyncData = async () => {
-      const showUsers = fetchShowUsers;
       const fetchGithubUsers = (await useGithubUsers(
-        showUsers
+        fetchShowUsers
       )) as githubUsers;
       setGitHubUserList(fetchGithubUsers);
-      // setDatasets(useDatasets(fetchGithubUsers));
-      // setContributionDateDuring(await useDateDuring());
     };
     asyncData();
   }, [fetchShowUsers]);

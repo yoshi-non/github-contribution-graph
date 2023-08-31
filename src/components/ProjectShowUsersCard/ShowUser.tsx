@@ -14,6 +14,7 @@ import { githubUsersState } from '@/store/githubUsersAtom';
 import { ShowUserType } from '@/types/ShowUserType';
 import { useState } from 'react';
 import InputColor from 'react-input-color';
+import { memberCountState } from '@/store/memberCountAtoms';
 
 const styles = {
   memberBody: css`
@@ -96,6 +97,9 @@ const ShowUser = ({ props }: Props) => {
 
   const [color, setColor] = useState<Color>();
 
+  const [memberCount, setMemberCount] =
+    useRecoilState<number>(memberCountState);
+
   const changeColorShowUser = async () => {
     const ref = doc(db, `showUsers/${showUser.id}`);
     await updateDoc(ref, {
@@ -106,6 +110,7 @@ const ShowUser = ({ props }: Props) => {
   const deleteShowUser = async (showUserId: string) => {
     const ref = doc(db, `showUsers/${showUserId}`);
     await deleteDoc(ref);
+    setMemberCount(memberCount - 1);
   };
   return (
     <div css={styles.memberBody}>
