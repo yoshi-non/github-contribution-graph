@@ -12,6 +12,8 @@ import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import ShowUser from './ProjectShowUsersCard/ShowUser';
 import { ShowUserType } from '@/types/ShowUserType';
 import { memberCountState } from '@/store/memberCountAtoms';
+import { motion } from 'framer-motion';
+import { fadeIn } from '@/lib/framerMotion/variants';
 
 const styles = {
   container: css`
@@ -85,15 +87,16 @@ const styles = {
     transform: translate(-50%, -50%);
     width: 50%;
     max-width: 500px;
+  `,
+  modalContent: css`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     background-color: #fff;
     border-radius: 10px;
     padding: 2rem;
     border: 1px solid #ddd;
-  `,
-  modalContent: css`
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
     h2 {
       font-size: 1.2rem;
       font-weight: bold;
@@ -206,7 +209,12 @@ const ProjectShowUsersCard = () => {
             }
             css={styles.modal}
           >
-            <div css={styles.modalContent}>
+            <motion.div
+              css={styles.modalContent}
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+            >
               <h2>Add Member to {fetchProject?.name}</h2>
               <div css={styles.addMemberInputBox}>
                 <input
@@ -231,7 +239,7 @@ const ProjectShowUsersCard = () => {
               >
                 <CloseIcon />
               </button>
-            </div>
+            </motion.div>
           </Modal>
         </div>
       </div>
