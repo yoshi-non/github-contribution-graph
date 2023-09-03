@@ -50,6 +50,9 @@ const styles = {
     &:focus {
       outline: 1px solid #ddd;
     }
+    &::placeholder {
+      color: #c6c6c6;
+    }
   `,
   linkWrapper: css`
     display: flex;
@@ -107,7 +110,6 @@ const Topbar = ({ crrPath }: Props) => {
   >(crrPath);
 
   useEffect(() => {
-    if (!crrPath) return;
     setProjectName(crrPath);
   }, [fbUser, router, crrPath]);
 
@@ -126,12 +128,12 @@ const Topbar = ({ crrPath }: Props) => {
         <Link href={'/project-list'}>
           <p css={styles.homeLink}>MY FILES</p>
         </Link>
-        {projectName && (
+        {id && (
           <div>
             <span>&nbsp;/&nbsp;</span>
             <input
               css={styles.projectNameInput}
-              value={projectName ? projectName : crrPath}
+              value={projectName}
               onChange={(e) =>
                 setProjectName(e.target.value)
               }
