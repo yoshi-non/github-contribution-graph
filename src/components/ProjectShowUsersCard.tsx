@@ -148,6 +148,10 @@ const ProjectShowUsersCard = () => {
 
   const [addMemberModalIsOpen, setAddMemberModalIsOpen] =
     useState<boolean>(false);
+  const [
+    exportMemberModalIsOpen,
+    setExportMemberModalIsOpen,
+  ] = useState<boolean>(false);
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
@@ -172,6 +176,10 @@ const ProjectShowUsersCard = () => {
     setAddMemberModalIsOpen(false);
   };
 
+  const closeExportMemberModal = () => {
+    setExportMemberModalIsOpen(false);
+  };
+
   const closeAddMemberModal = () => {
     setAddMemberModalIsOpen(false);
     setGithubId('');
@@ -187,10 +195,49 @@ const ProjectShowUsersCard = () => {
           /> */}
         </div>
         <div css={styles.buttonBox}>
-          <button css={styles.exportButton}>
+          <button
+            css={styles.exportButton}
+            onClick={() => setExportMemberModalIsOpen(true)}
+          >
             <SystemUpdateAltIcon />
             <span>Export</span>
           </button>
+          <Modal
+            isOpen={exportMemberModalIsOpen}
+            onRequestClose={closeExportMemberModal}
+            appElement={
+              typeof window !== 'undefined'
+                ? (document.getElementById(
+                    '__next'
+                  ) as HTMLElement)
+                : undefined
+            }
+            css={styles.modal}
+          >
+            <motion.div
+              css={styles.modalContent}
+              initial="hidden"
+              animate="visible"
+              variants={fadeIn}
+            >
+              <h2>Export Member to {fetchProject?.name}</h2>
+              <div>
+                <p>グループから一括エクスポート</p>
+                <div>
+                  <div>
+                    <input type="checkbox" />
+                    <span>グループ名</span>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={closeExportMemberModal}
+                css={styles.closeButton}
+              >
+                <CloseIcon />
+              </button>
+            </motion.div>
+          </Modal>
           <button
             css={styles.addMemberButton}
             onClick={() => setAddMemberModalIsOpen(true)}
