@@ -105,11 +105,13 @@ const Topbar = ({ crrPath }: Props) => {
   const { fbUser } = useAuth();
   const router = useRouter();
   const { id } = router.query;
-  const [projectName, setProjectName] = useState<
-    string | undefined
-  >(crrPath);
+  const [projectName, setProjectName] =
+    useState<string>('');
 
   useEffect(() => {
+    if (crrPath == undefined) {
+      crrPath = '';
+    }
     setProjectName(crrPath);
   }, [fbUser, router, crrPath]);
 
