@@ -12,7 +12,17 @@ export const useGithubUsers = async (
     showUsers.map(async (user) => {
       const response = await fetch(
         `https://api.github.com/users/${user.githubId}`
-      ).then((res) => res.json());
+      );
+
+      if (!response.ok) {
+        console.log(
+          `Failed to fetch data for ${user.githubId}:`
+        );
+        return null;
+      }
+
+      const responseData = await response.json();
+
       const contributionObject = (await useContributions(
         user.githubId
       )) as ResponseContributionObject;
@@ -29,10 +39,10 @@ export const useGithubUsers = async (
       return {
         id: user.githubId,
         name:
-          response.name === null
-            ? response.login
-            : response.name,
-        avatarUrl: response.avatar_url,
+          responseData.name === null
+            ? responseData.login
+            : responseData.name,
+        avatarUrl: responseData.avatar_url,
         contributionsCollection:
           contributionsCollectionArray,
         allContributions:
@@ -42,8 +52,11 @@ export const useGithubUsers = async (
       };
     })
   );
-  const sortedUsers = users.sort(
-    (a, b) => b.allContributions - a.allContributions
-  );
-  return sortedUsers;
+
+  // ユーザー情報がnullのものを除外する
+  const filteredUsers = users.filter(
+    (user) => user !== null
+  ) as githubUsers;
+
+  return filteredUsers;
 };
