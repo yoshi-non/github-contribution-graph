@@ -15,6 +15,7 @@ import { ShowUserType } from '@/types/ShowUserType';
 import { useState } from 'react';
 import InputColor from 'react-input-color';
 import { memberCountState } from '@/store/memberCountAtoms';
+import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 
 const styles = {
   memberBody: css`
@@ -100,10 +101,24 @@ const ShowUser = ({ props }: Props) => {
   const [memberCount, setMemberCount] =
     useRecoilState<number>(memberCountState);
 
+  const [fetchShowUsers, setFetchShowUsers] =
+    useRecoilState(fetchShowUsersState);
+
   const changeColorShowUser = async () => {
+    setFetchShowUsers(
+      fetchShowUsers.map((user) => {
+        if (user.id === showUser.id) {
+          return {
+            ...user,
+            color: color?.hex || '#fff',
+          };
+        }
+        return user;
+      })
+    );
     const ref = doc(db, `showUsers/${showUser.id}`);
     await updateDoc(ref, {
-      color: color?.hex,
+      color: color?.hex || '#fff',
     });
   };
 
