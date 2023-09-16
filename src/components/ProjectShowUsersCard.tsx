@@ -14,6 +14,7 @@ import { ShowUserType } from '@/types/ShowUserType';
 import { memberCountState } from '@/store/memberCountAtoms';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/lib/framerMotion/variants';
+import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 
 const styles = {
   container: css`
@@ -66,6 +67,12 @@ const styles = {
       margin-right: 0.5rem;
       font-size: 1rem;
     }
+  `,
+  exportTitle: css`
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: center;
   `,
   addMemberButton: css`
     font-weight: bold;
@@ -162,6 +169,8 @@ const ProjectShowUsersCard = () => {
     useRecoilState<number>(memberCountState);
 
   const [githubId, setGithubId] = useState<string>('');
+  const [githubOrgId, setGithubOrgId] =
+    useState<string>('');
   const addMemberHandler = () => {
     if (!fbUser) return;
     if (id === undefined) return;
@@ -174,6 +183,34 @@ const ProjectShowUsersCard = () => {
     createShowUserHandler(showUser, router);
     setMemberCount(memberCount + 1);
     setAddMemberModalIsOpen(false);
+  };
+
+  const exportOrgMembersHandler = async () => {
+    if (!fbUser) return;
+    if (id === undefined) return;
+    if (githubOrgId === '') return;
+    // githubOrgIdのメンバーを一括で追加する
+    const githubIds = await useGithubOrgMembers(
+      githubOrgId
+    );
+
+    if (githubIds === null) {
+      alert(
+        'このOrganization Idは存在しないかPublicユーザーがいません'
+      );
+      return;
+    }
+
+    githubIds.map((githubId: string) => {
+      const showUser = {
+        projectId: id as string,
+        githubId: githubId,
+        color: '#fff',
+      };
+      createShowUserHandler(showUser, router);
+    });
+    setMemberCount(memberCount + 1);
+    setExportMemberModalIsOpen(false);
   };
 
   const closeExportMemberModal = () => {
@@ -222,20 +259,33 @@ const ProjectShowUsersCard = () => {
             >
               <h2>Export Member to {fetchProject?.name}</h2>
               <div>
-                <p>グループから一括エクスポート</p>
-                <div>
-                  <div>
-                    <input type="checkbox" />
-                    <span>グループ名</span>
-                  </div>
+                <p css={styles.exportTitle}>
+                  グループから一括エクスポート
+                </p>
+                <div css={styles.addMemberInputBox}>
+                  <input
+                    css={styles.addMemberInput}
+                    placeholder="GitHub Organization Id"
+                    type="text"
+                    onChange={(e) =>
+                      setGithubOrgId(e.target.value)
+                    }
+                    value={githubOrgId}
+                  />
+                  <button
+                    css={styles.addMemberButton}
+                    onClick={exportOrgMembersHandler}
+                  >
+                    Add
+                  </button>
                 </div>
+                <button
+                  onClick={closeExportMemberModal}
+                  css={styles.closeButton}
+                >
+                  <CloseIcon />
+                </button>
               </div>
-              <button
-                onClick={closeExportMemberModal}
-                css={styles.closeButton}
-              >
-                <CloseIcon />
-              </button>
             </motion.div>
           </Modal>
           <button
