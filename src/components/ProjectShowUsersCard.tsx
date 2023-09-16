@@ -15,6 +15,7 @@ import { memberCountState } from '@/store/memberCountAtoms';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/lib/framerMotion/variants';
 import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
+import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 
 const styles = {
   container: css`
@@ -171,10 +172,15 @@ const ProjectShowUsersCard = () => {
   const [githubId, setGithubId] = useState<string>('');
   const [githubOrgId, setGithubOrgId] =
     useState<string>('');
-  const addMemberHandler = () => {
+  const addMemberHandler = async () => {
     if (!fbUser) return;
     if (id === undefined) return;
     if (githubId === '') return;
+    const isExist = await useCheckGithubId(githubId);
+    if (!isExist) {
+      alert('このGitHub Idは存在しないです');
+      return;
+    }
     const showUser = {
       projectId: id as string,
       githubId: githubId,
