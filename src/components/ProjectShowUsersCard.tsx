@@ -175,15 +175,16 @@ const ProjectShowUsersCard = () => {
   const addMemberHandler = async () => {
     if (!fbUser) return;
     if (id === undefined) return;
-    if (githubId === '') return;
-    const isExist = await useCheckGithubId(githubId);
+    const shapeGithubId = githubId.trim();
+    if (shapeGithubId === '') return;
+    const isExist = await useCheckGithubId(shapeGithubId);
     if (!isExist) {
       alert('このGitHub Idは存在しないです');
       return;
     }
     const showUser = {
       projectId: id as string,
-      githubId: githubId,
+      githubId: shapeGithubId,
       color: '#fff',
     };
     createShowUserHandler(showUser, router);
@@ -194,10 +195,11 @@ const ProjectShowUsersCard = () => {
   const exportOrgMembersHandler = async () => {
     if (!fbUser) return;
     if (id === undefined) return;
-    if (githubOrgId === '') return;
+    const shapeGithubOrgId = githubOrgId.trim();
+    if (shapeGithubOrgId === '') return;
     // githubOrgIdのメンバーを一括で追加する
     const githubIds = await useGithubOrgMembers(
-      githubOrgId
+      shapeGithubOrgId
     );
 
     if (githubIds === null) {
