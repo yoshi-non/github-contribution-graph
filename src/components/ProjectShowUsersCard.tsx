@@ -16,6 +16,7 @@ import { motion } from 'framer-motion';
 import { fadeIn } from '@/lib/framerMotion/variants';
 import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 import { useCheckGithubId } from '@/hooks/useCheckGithubId';
+import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
 
 const styles = {
   container: css`
@@ -134,6 +135,17 @@ const styles = {
       opacity: 0.8;
     }
   `,
+  modalHref: css`
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #1f6feb;
+    text-align: center;
+    margin-top: 1rem;
+    transition: all 0.2s;
+    &:hover {
+      opacity: 0.8;
+    }
+  `,
   memberWrapper: css`
     margin-top: 1rem;
     display: flex;
@@ -174,6 +186,13 @@ const ProjectShowUsersCard = () => {
   const [githubId, setGithubId] = useState<string>('');
   const [githubOrgId, setGithubOrgId] =
     useState<string>('');
+  const [githubRepoId, setGithubRepoId] =
+    useState<string>('');
+
+  type ExportSelectText = 'Orgs' | 'Repos';
+
+  const [exportSelectText, setExportSelectText] =
+    useState<ExportSelectText>('Orgs');
   const addMemberHandler = async () => {
     if (!fbUser) return;
     if (id === undefined) return;
@@ -202,6 +221,35 @@ const ProjectShowUsersCard = () => {
     // githubOrgIdのメンバーを一括で追加する
     const githubIds = await useGithubOrgMembers(
       shapeGithubOrgId
+    );
+
+    if (githubIds === null) {
+      alert(
+        'このOrganization Idは存在しないかPublicユーザーがいません'
+      );
+      return;
+    }
+
+    githubIds.map((githubId: string) => {
+      const showUser = {
+        projectId: id as string,
+        githubId: githubId,
+        color: '#fff',
+      };
+      createShowUserHandler(showUser, router);
+    });
+    setMemberCount(memberCount + 1);
+    setExportMemberModalIsOpen(false);
+  };
+
+  const exportRepoMembersHandler = async () => {
+    if (!fbUser) return;
+    if (id === undefined) return;
+    const shapeGithubRepoId = githubRepoId.trim();
+    if (shapeGithubRepoId === '') return;
+    // githubRepoIdのメンバーを一括で追加する
+    const githubIds = await useGithubRepoMembers(
+      shapeGithubRepoId
     );
 
     if (githubIds === null) {
@@ -268,34 +316,84 @@ const ProjectShowUsersCard = () => {
               variants={fadeIn}
             >
               <h2>Export Member to {fetchProject?.name}</h2>
-              <div>
-                <p css={styles.exportTitle}>
-                  グループから一括エクスポート
-                </p>
-                <div css={styles.addMemberInputBox}>
-                  <input
-                    css={styles.addMemberInput}
-                    placeholder="GitHub Organization Id"
-                    type="search"
-                    onChange={(e) =>
-                      setGithubOrgId(e.target.value)
-                    }
-                    value={githubOrgId}
-                  />
+              {exportSelectText === 'Orgs' && (
+                <div>
+                  <p css={styles.exportTitle}>
+                    オーガニゼーションから一括エクスポート
+                  </p>
+                  <div css={styles.addMemberInputBox}>
+                    <input
+                      css={styles.addMemberInput}
+                      placeholder="GitHub Organization Id"
+                      type="search"
+                      onChange={(e) =>
+                        setGithubOrgId(e.target.value)
+                      }
+                      value={githubOrgId}
+                    />
+                    <button
+                      css={styles.addMemberButton}
+                      onClick={exportOrgMembersHandler}
+                    >
+                      Add
+                    </button>
+                  </div>
                   <button
-                    css={styles.addMemberButton}
-                    onClick={exportOrgMembersHandler}
+                    onClick={closeExportMemberModal}
+                    css={styles.closeButton}
                   >
-                    Add
+                    <CloseIcon />
                   </button>
+                  <div css={styles.modalHref}>
+                    <a
+                      onClick={() =>
+                        setExportSelectText('Repos')
+                      }
+                    >
+                      レポジトリから一括で追加する
+                    </a>
+                  </div>
                 </div>
-                <button
-                  onClick={closeExportMemberModal}
-                  css={styles.closeButton}
-                >
-                  <CloseIcon />
-                </button>
-              </div>
+              )}
+              {exportSelectText === 'Repos' && (
+                <div>
+                  <p css={styles.exportTitle}>
+                    レポジトリから一括エクスポート
+                  </p>
+                  <div css={styles.addMemberInputBox}>
+                    <input
+                      css={styles.addMemberInput}
+                      placeholder="GitHub Repository Id"
+                      type="search"
+                      onChange={(e) =>
+                        setGithubRepoId(e.target.value)
+                      }
+                      value={githubRepoId}
+                    />
+                    <button
+                      css={styles.addMemberButton}
+                      onClick={exportRepoMembersHandler}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <button
+                    onClick={closeExportMemberModal}
+                    css={styles.closeButton}
+                  >
+                    <CloseIcon />
+                  </button>
+                  <div css={styles.modalHref}>
+                    <a
+                      onClick={() =>
+                        setExportSelectText('Orgs')
+                      }
+                    >
+                      オーガニゼーションから一括で追加する
+                    </a>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </Modal>
           <button
