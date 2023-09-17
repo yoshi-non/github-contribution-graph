@@ -55,12 +55,20 @@ const styles = {
     gap: 1rem;
   `,
   changeColorButton: css`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    &:hover {
-      opacity: 0.8;
+    .css-cnfek5-Popover {
+      transform: translate3d(
+        -104px,
+        -342px,
+        0px
+      ) !important;
+    }
+    .css-6fii2q-Arrow {
+      display: none !important;
     }
   `,
   deleteButton: css`
