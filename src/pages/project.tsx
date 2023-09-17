@@ -1,4 +1,5 @@
 import ProjectGraphCard from '@/components/ProjectGraphCard';
+import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
 import Sidebar from '@/components/Sidebar';
 import SidebarTitle from '@/components/Sidebar/SidebarTitle';
@@ -12,6 +13,7 @@ import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import { githubUsersState } from '@/store/githubUsersAtom';
 import { memberCountState } from '@/store/memberCountAtoms';
+import { projectSelectViewState } from '@/store/projectSelectViewAtoms';
 import { isOpenSidebarState } from '@/store/sidebarAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
@@ -78,6 +80,9 @@ const Project = () => {
   const [memberCount, setMemberCount] =
     useRecoilState<number>(memberCountState);
 
+  const [projectSelectView, setProjectSelectView] =
+    useRecoilState(projectSelectViewState);
+
   useEffect(() => {
     if (typeof projectId === 'string') {
       setFetchShowUsers([]);
@@ -125,8 +130,13 @@ const Project = () => {
       <div css={styles.mainWrapper}>
         {isOpenSidebar && <Sidebar />}
         <div css={styles.projectWrapper}>
-          <ProjectGraphCard />
-          <ProjectShowUsersCard />
+          <ProjectNavbar />
+          {projectSelectView === 'graph' && (
+            <div>
+              <ProjectGraphCard />
+              <ProjectShowUsersCard />
+            </div>
+          )}
         </div>
       </div>
     </div>
