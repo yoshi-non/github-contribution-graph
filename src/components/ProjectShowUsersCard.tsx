@@ -283,7 +283,7 @@ const ProjectShowUsersCard = () => {
   return (
     <div css={styles.container}>
       <div css={styles.topbar}>
-        <div css={styles.memberSearchInput}>
+        <div>
           {/* <input
             type="text"
             placeholder="Find a member..."
