@@ -276,7 +276,7 @@ const ProjectShowUsersCard = () => {
                   <input
                     css={styles.addMemberInput}
                     placeholder="GitHub Organization Id"
-                    type="text"
+                    type="search"
                     onChange={(e) =>
                       setGithubOrgId(e.target.value)
                     }
@@ -327,7 +327,7 @@ const ProjectShowUsersCard = () => {
                 <input
                   css={styles.addMemberInput}
                   placeholder="GitHub User Id"
-                  type="text"
+                  type="search"
                   onChange={(e) =>
                     setGithubId(e.target.value)
                   }
