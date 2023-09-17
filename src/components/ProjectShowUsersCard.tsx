@@ -19,7 +19,9 @@ import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 
 const styles = {
   container: css`
-    width: 100%;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
     padding: 1rem;
     background-color: rgb(237, 241, 245);
   `,
