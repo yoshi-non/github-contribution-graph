@@ -150,14 +150,17 @@ const Topbar = ({ crrPath }: Props) => {
       <div css={styles.linkWrapper}>
         {fbUser?.photoURL && (
           <div>
-            <button css={styles.accountButton}>
+            <Link
+              href={'/profile'}
+              css={styles.accountButton}
+            >
               <Image
                 src={fbUser?.photoURL}
                 alt={'githubアカウントのアイコン'}
                 height={35}
                 width={35}
               />
-            </button>
+            </Link>
           </div>
         )}
         <div>
