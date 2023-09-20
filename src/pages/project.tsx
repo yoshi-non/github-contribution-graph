@@ -130,7 +130,7 @@ const Project = () => {
       <div css={styles.mainWrapper}>
         {isOpenSidebar && <Sidebar />}
         <div css={styles.projectWrapper}>
-          <ProjectNavbar />
+          <ProjectNavbar ownerId={fetchProject?.ownerId} />
           {projectSelectView === 'graph' && (
             <div>
               <ProjectGraphCard />
