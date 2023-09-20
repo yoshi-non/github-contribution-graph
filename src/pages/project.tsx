@@ -1,3 +1,4 @@
+import DeleteAccountCard from '@/components/Project/Setting/DeleteAccountCard';
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
@@ -135,6 +136,11 @@ const Project = () => {
             <div>
               <ProjectGraphCard />
               <ProjectShowUsersCard />
+            </div>
+          )}
+          {projectSelectView === 'setting' && (
+            <div>
+              <DeleteAccountCard />
             </div>
           )}
         </div>
