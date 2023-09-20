@@ -1,3 +1,5 @@
+import { useAuth } from '@/context/auth';
+import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { projectSelectViewState } from '@/store/projectSelectViewAtoms';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
@@ -31,9 +33,16 @@ const styles = {
   `,
 };
 
-const ProjectNavbar = () => {
+type Props = {
+  ownerId?: string;
+};
+
+const ProjectNavbar = ({ ownerId }: Props) => {
   const [projectSelectView, setProjectSelectView] =
     useRecoilState(projectSelectViewState);
+
+  const { fbUser } = useAuth();
+
   return (
     <div css={styles.container}>
       <ul css={styles.ul}>
@@ -55,16 +64,18 @@ const ProjectNavbar = () => {
         >
           Race
         </li>
-        <li
-          css={[
-            styles.li,
-            projectSelectView === 'setting' &&
-              styles.select,
-          ]}
-          onClick={() => setProjectSelectView('setting')}
-        >
-          Setting
-        </li>
+        {fbUser?.uid === ownerId && (
+          <li
+            css={[
+              styles.li,
+              projectSelectView === 'setting' &&
+                styles.select,
+            ]}
+            onClick={() => setProjectSelectView('setting')}
+          >
+            Setting
+          </li>
+        )}
       </ul>
     </div>
   );

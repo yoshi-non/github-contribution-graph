@@ -1,3 +1,4 @@
+import DeleteProjectCard from '@/components/Project/Setting/DeleteProjectCard';
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
@@ -67,7 +68,7 @@ const Project = () => {
   }, [fbUser, isLoading, router]);
 
   const { id } = router.query;
-  const projectId = id;
+  const projectId = id as string;
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
@@ -130,11 +131,16 @@ const Project = () => {
       <div css={styles.mainWrapper}>
         {isOpenSidebar && <Sidebar />}
         <div css={styles.projectWrapper}>
-          <ProjectNavbar />
+          <ProjectNavbar ownerId={fetchProject?.ownerId} />
           {projectSelectView === 'graph' && (
             <div>
               <ProjectGraphCard />
               <ProjectShowUsersCard />
+            </div>
+          )}
+          {projectSelectView === 'setting' && (
+            <div>
+              <DeleteProjectCard projectId={projectId} />
             </div>
           )}
         </div>
