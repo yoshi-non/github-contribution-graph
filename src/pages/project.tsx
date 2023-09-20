@@ -1,4 +1,4 @@
-import DeleteAccountCard from '@/components/Project/Setting/DeleteAccountCard';
+import DeleteProjectCard from '@/components/Project/Setting/DeleteProjectCard';
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
@@ -140,7 +140,7 @@ const Project = () => {
           )}
           {projectSelectView === 'setting' && (
             <div>
-              <DeleteAccountCard />
+              <DeleteProjectCard />
             </div>
           )}
         </div>

@@ -1,4 +1,6 @@
+import { db } from '@/lib/firebaseClient';
 import { css } from '@emotion/react';
+import { deleteDoc, doc } from 'firebase/firestore';
 
 const styles = {
   container: css`
@@ -17,7 +19,7 @@ const styles = {
     border: 2px solid #631c03;
     border-radius: 10px;
   `,
-  deleteAccountWrapper: css`
+  deleteProjectWrapper: css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -37,12 +39,21 @@ const styles = {
   `,
 };
 
-const DeleteAccountCard = () => {
+const DeleteProjectCard = () => {
+  const projectId = 'test';
+  const deleteProjectHandler = async () => {
+    try {
+      await deleteDoc(doc(db, 'projects', projectId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div css={styles.container}>
       <h2 css={styles.title}>Danger Zone</h2>
       <div css={styles.dangerWrapper}>
-        <div css={styles.deleteAccountWrapper}>
+        <div css={styles.deleteProjectWrapper}>
           <div>
             <h3>Delete Account</h3>
             <p>
@@ -50,7 +61,10 @@ const DeleteAccountCard = () => {
               going back. Please be certain.
             </p>
           </div>
-          <button css={styles.dangerButton}>
+          <button
+            onClick={deleteProjectHandler}
+            css={styles.dangerButton}
+          >
             Delete Account
           </button>
         </div>
@@ -59,4 +73,4 @@ const DeleteAccountCard = () => {
   );
 };
 
-export default DeleteAccountCard;
+export default DeleteProjectCard;
