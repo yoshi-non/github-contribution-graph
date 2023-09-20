@@ -68,7 +68,7 @@ const Project = () => {
   }, [fbUser, isLoading, router]);
 
   const { id } = router.query;
-  const projectId = id;
+  const projectId = id as string;
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
@@ -140,7 +140,7 @@ const Project = () => {
           )}
           {projectSelectView === 'setting' && (
             <div>
-              <DeleteProjectCard />
+              <DeleteProjectCard projectId={projectId} />
             </div>
           )}
         </div>

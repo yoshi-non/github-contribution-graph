@@ -1,6 +1,7 @@
 import { db } from '@/lib/firebaseClient';
 import { css } from '@emotion/react';
 import { deleteDoc, doc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 
 const styles = {
   container: css`
@@ -39,14 +40,19 @@ const styles = {
   `,
 };
 
-const DeleteProjectCard = () => {
-  const projectId = 'test';
+type Props = {
+  projectId: string;
+};
+
+const DeleteProjectCard = ({ projectId }: Props) => {
+  const router = useRouter();
   const deleteProjectHandler = async () => {
     try {
       await deleteDoc(doc(db, 'projects', projectId));
     } catch (error) {
       console.log(error);
     }
+    router.push('/project-list');
   };
 
   return (
