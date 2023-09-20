@@ -61,9 +61,9 @@ const DeleteProjectCard = ({ projectId }: Props) => {
       <div css={styles.dangerWrapper}>
         <div css={styles.deleteProjectWrapper}>
           <div>
-            <h3>Delete Account</h3>
+            <h3>Delete Project</h3>
             <p>
-              Once you delete your account, there is no
+              Once you delete this project, there is no
               going back. Please be certain.
             </p>
           </div>
@@ -71,7 +71,7 @@ const DeleteProjectCard = ({ projectId }: Props) => {
             onClick={deleteProjectHandler}
             css={styles.dangerButton}
           >
-            Delete Account
+            Delete Project
           </button>
         </div>
       </div>
