@@ -3,6 +3,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
 import { isOpenSidebarState } from '@/store/sidebarAtoms';
+import Link from 'next/link';
 
 const styles = {
   container: css`
@@ -65,9 +66,9 @@ const SidebarTitle = () => {
         />
       </button>
       {isOpenSidebar && (
-        <p css={styles.userName}>
+        <Link href={'/project-list'} css={styles.userName}>
           {fbUser?.displayName}'s Workspace
-        </p>
+        </Link>
       )}
     </div>
   );

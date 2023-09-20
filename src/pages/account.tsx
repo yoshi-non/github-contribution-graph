@@ -1,4 +1,4 @@
-import ProfileCard from '@/components/ProfileCard';
+import AccountCard from '@/components/AccountCard';
 import Sidebar from '@/components/Sidebar';
 import SidebarTitle from '@/components/Sidebar/SidebarTitle';
 import Topbar from '@/components/Topbar';
@@ -6,7 +6,7 @@ import { useAuth } from '@/context/auth';
 import { isOpenSidebarState } from '@/store/sidebarAtoms';
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 const styles = {
@@ -57,12 +57,12 @@ const Profile = () => {
     <div css={styles.container}>
       <div css={styles.topContent}>
         <SidebarTitle />
-        <Topbar />
+        <Topbar mainPath={'Account Setting'} />
       </div>
       <div css={styles.mainWrapper}>
         {isOpenSidebar && <Sidebar />}
         <div css={styles.profileWrapper}>
-          <ProfileCard />
+          <AccountCard />
         </div>
       </div>
     </div>

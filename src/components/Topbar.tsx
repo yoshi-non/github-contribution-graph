@@ -98,10 +98,11 @@ const styles = {
 };
 
 type Props = {
+  mainPath?: string;
   crrPath?: string;
 };
 
-const Topbar = ({ crrPath }: Props) => {
+const Topbar = ({ mainPath, crrPath }: Props) => {
   const { fbUser } = useAuth();
   const router = useRouter();
   const { id } = router.query;
@@ -127,9 +128,13 @@ const Topbar = ({ crrPath }: Props) => {
   return (
     <div css={styles.container}>
       <div css={styles.crrPathWrapper}>
-        <Link href={'/project-list'}>
-          <p css={styles.homeLink}>MY FILES</p>
-        </Link>
+        {mainPath ? (
+          <p>{mainPath}</p>
+        ) : (
+          <Link href={'/project-list'}>
+            <p css={styles.homeLink}>MY FILES </p>
+          </Link>
+        )}
         {id && (
           <div>
             <span>&nbsp;/&nbsp;</span>
@@ -151,7 +156,7 @@ const Topbar = ({ crrPath }: Props) => {
         {fbUser?.photoURL && (
           <div>
             <Link
-              href={'/profile'}
+              href={'/account'}
               css={styles.accountButton}
             >
               <Image
