@@ -36,6 +36,17 @@ export const useGithubUsers = async (
             )
         );
 
+      const contributionDateDuring =
+        contributionObject.user.contributionsCollection.contributionCalendar.weeks.map(
+          (week) => {
+            return `${week.contributionDays[0].date} ~ ${
+              week.contributionDays[
+                week.contributionDays.length - 1
+              ].date
+            }`;
+          }
+        );
+
       return {
         id: user.githubId,
         name:
@@ -49,6 +60,7 @@ export const useGithubUsers = async (
           contributionObject.user.contributionsCollection
             .contributionCalendar.totalContributions,
         color: user.color,
+        contributionDateDuring,
       };
     })
   );
