@@ -23,13 +23,8 @@ export type githubUsers = {
   contributionsCollection?: number[];
   allContributions?: number;
   color: string;
+  contributionDateDuring?: string[];
 }[];
-
-// コントリビューションの一週間のはじまりとおわりの日付
-export const contributionDateDuringState = atom<string[]>({
-  key: 'contributionDateDuringState',
-  default: [],
-});
 
 export type dataset = {
   label: string;

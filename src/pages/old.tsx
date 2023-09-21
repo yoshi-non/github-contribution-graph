@@ -1,8 +1,4 @@
-import {
-  datasetState,
-  contributionDateDuringState,
-  githubUsers,
-} from '@/store/atoms';
+import { datasetState, githubUsers } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -24,7 +20,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useDatasets } from '@/hooks/useDatasets';
 import { useGithubUsers } from '@/hooks/useGithubUsers';
-import { useDateDuring } from '@/hooks/useDateDuring';
 import { defaultGithubUsers } from '@/githubUsers';
 
 ChartJS.register(
@@ -38,12 +33,6 @@ ChartJS.register(
 );
 
 export default function Old() {
-  // チャートに使用する日付の配列
-  const [
-    contributionDateDuring,
-    setContributionDateDuring,
-  ] = useRecoilState(contributionDateDuringState);
-
   // データセット
   const [datasets, setDatasets] =
     useRecoilState(datasetState);
@@ -61,7 +50,6 @@ export default function Old() {
       )) as githubUsers;
       setGitHubUserList(fetchGithubUsers);
       setDatasets(useDatasets(fetchGithubUsers));
-      setContributionDateDuring(await useDateDuring());
     };
     asyncData();
   }, []);
@@ -82,7 +70,7 @@ export default function Old() {
   };
 
   const graphData = {
-    labels: contributionDateDuring,
+    labels: githubUserList[0]?.contributionDateDuring,
     datasets: datasets,
   };
 
