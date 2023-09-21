@@ -122,6 +122,10 @@ const Project = () => {
     asyncData();
   }, [fetchShowUsers]);
 
+  if (!fbUser || isLoading) {
+    return null;
+  }
+
   return (
     <div css={styles.container}>
       <div css={styles.topContent}>
