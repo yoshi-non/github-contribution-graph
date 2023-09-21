@@ -61,6 +61,10 @@ export default function Home() {
     }
   }, [fbUser, isLoading, router]);
 
+  if (fbUser || isLoading) {
+    return null;
+  }
+
   return (
     <div css={styles.container}>
       <div css={styles.titleWrapper}>
