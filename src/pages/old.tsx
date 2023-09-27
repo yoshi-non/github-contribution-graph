@@ -1,7 +1,6 @@
-import { datasetState, githubUsers } from '@/store/atoms';
+import { dataset, githubUsers } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -34,8 +33,7 @@ ChartJS.register(
 
 export default function Old() {
   // データセット
-  const [datasets, setDatasets] =
-    useRecoilState(datasetState);
+  const [datasets, setDatasets] = useState<dataset>([]);
 
   // GitHubユーザーのリスト
   const [githubUserList, setGitHubUserList] =

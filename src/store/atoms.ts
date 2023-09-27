@@ -1,5 +1,3 @@
-import { atom } from 'recoil';
-
 export type ResponseContributionObject = {
   user: {
     contributionsCollection: {
@@ -32,9 +30,3 @@ export type dataset = {
   borderColor: string;
   backgroundColor: string;
 }[];
-
-// グラフに渡すデータセット
-export const datasetState = atom<dataset>({
-  key: 'datasetState',
-  default: [],
-});
