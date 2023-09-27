@@ -8,7 +8,6 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/auth';
 import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
-import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 import ShowUser from './ProjectShowUsersCard/ShowUser';
 import { ShowUserType } from '@/types/ShowUserType';
 import { memberCountState } from '@/store/memberCountAtoms';
@@ -17,6 +16,7 @@ import { fadeIn } from '@/lib/framerMotion/variants';
 import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
+import { githubUsers } from '@/store/atoms';
 
 const styles = {
   container: css`
@@ -163,7 +163,19 @@ const styles = {
   `,
 };
 
-const ProjectShowUsersCard = () => {
+type Props = {
+  fetchShowUsers: ShowUserType[];
+  setFetchShowUsers: React.Dispatch<
+    React.SetStateAction<ShowUserType[]>
+  >;
+  githubUserList: githubUsers;
+};
+
+const ProjectShowUsersCard = ({
+  fetchShowUsers,
+  setFetchShowUsers,
+  githubUserList,
+}: Props) => {
   const router = useRouter();
   const { id } = router.query;
   const { fbUser, isLoading } = useAuth();
@@ -177,9 +189,6 @@ const ProjectShowUsersCard = () => {
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
-  const [fetchShowUsers, setFetchShowUsers] =
-    useRecoilState<ShowUserType[]>(fetchShowUsersState);
-
   const [memberCount, setMemberCount] =
     useRecoilState<number>(memberCountState);
 
@@ -455,7 +464,12 @@ const ProjectShowUsersCard = () => {
         {fetchShowUsers?.map((showUser) => (
           <ShowUser
             key={showUser.id}
-            props={{ showUser }}
+            props={{
+              showUser,
+              fetchShowUsers,
+              setFetchShowUsers,
+              githubUserList,
+            }}
           />
         ))}
       </div>

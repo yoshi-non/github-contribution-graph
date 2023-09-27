@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import ContributionGraph from './ProjectGraphCard/ContributionGraph';
+import { githubUsers } from '@/store/atoms';
 
 const styles = {
   container: css`
@@ -7,10 +8,14 @@ const styles = {
   `,
 };
 
-const ProjectGraphCard = () => {
+type Props = {
+  githubUserList: githubUsers;
+};
+
+const ProjectGraphCard = ({ githubUserList }: Props) => {
   return (
     <div css={styles.container}>
-      <ContributionGraph />
+      <ContributionGraph githubUserList={githubUserList} />
     </div>
   );
 };

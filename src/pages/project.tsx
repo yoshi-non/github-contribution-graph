@@ -11,16 +11,15 @@ import { getShowUsersHandler } from '@/lib/firebase/getShowUsersHandler';
 import { db } from '@/lib/firebaseClient';
 import { githubUsers } from '@/store/atoms';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
-import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
-import { githubUsersState } from '@/store/githubUsersAtom';
 import { memberCountState } from '@/store/memberCountAtoms';
 import { projectSelectViewState } from '@/store/projectSelectViewAtoms';
 import { isOpenSidebarState } from '@/store/sidebarAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
+import { ShowUserType } from '@/types/ShowUserType';
 import { css } from '@emotion/react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 const styles = {
@@ -66,17 +65,17 @@ const Project = () => {
       router.push('/');
     }
   }, [fbUser, isLoading, router]);
-
   const { id } = router.query;
-  const projectId = id as string;
+  const projectId = id as string | undefined;
   const [fetchProject, setFetchProject] = useRecoilState(
     fetchProjectState
   );
-  const [fetchShowUsers, setFetchShowUsers] =
-    useRecoilState(fetchShowUsersState);
+  const [fetchShowUsers, setFetchShowUsers] = useState<
+    ShowUserType[]
+  >([]);
 
   const [githubUserList, setGitHubUserList] =
-    useRecoilState<githubUsers>(githubUsersState);
+    useState<githubUsers>([]);
 
   const [memberCount, setMemberCount] =
     useRecoilState<number>(memberCountState);
@@ -85,44 +84,48 @@ const Project = () => {
     useRecoilState(projectSelectViewState);
 
   useEffect(() => {
-    if (typeof projectId === 'string') {
-      setFetchShowUsers([]);
+    const getProject = async () => {
+      if (!projectId) return;
       const ref = doc(db, `projects/${projectId}`);
-      const unsubscribe = onSnapshot(ref, (snap) => {
+      onSnapshot(ref, (snap) => {
         if (snap.exists()) {
           setFetchProject(snap.data() as NonIdProjectType);
         }
       });
-      const fetchShowUsersAsync = async () => {
-        try {
-          const results = await getShowUsersHandler(
-            projectId
-          );
-          if (!results) return;
-          setFetchShowUsers(results);
-        } catch (error) {
-          console.log('Error fetching projects:', error);
-        }
-      };
-      fetchShowUsersAsync();
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, [projectId, setFetchProject, memberCount]);
+    };
+    getProject();
+  }, [projectId, setFetchProject]);
 
   useEffect(() => {
-    if (!fetchShowUsers) return;
+    const fetchShowUsersAsync = async () => {
+      try {
+        if (!projectId) return;
+        const results = await getShowUsersHandler(
+          projectId
+        );
+        if (!results) return;
+        setFetchShowUsers(results);
+      } catch (error) {
+        console.log('Error fetching projects:', error);
+      }
+    };
+    fetchShowUsersAsync();
+  }, [setFetchProject, memberCount]);
+
+  useEffect(() => {
     const asyncData = async () => {
-      const fetchGithubUsers = (await useGithubUsers(
-        fetchShowUsers
-      )) as githubUsers;
-      setGitHubUserList(fetchGithubUsers);
+      setGitHubUserList(
+        await useGithubUsers(fetchShowUsers)
+      );
     };
     asyncData();
   }, [fetchShowUsers]);
 
-  if (!fbUser || isLoading) {
+  if (
+    !fbUser ||
+    isLoading ||
+    typeof projectId !== 'string'
+  ) {
     return null;
   }
 
@@ -138,8 +141,14 @@ const Project = () => {
           <ProjectNavbar ownerId={fetchProject?.ownerId} />
           {projectSelectView === 'graph' && (
             <div>
-              <ProjectGraphCard />
-              <ProjectShowUsersCard />
+              <ProjectGraphCard
+                githubUserList={githubUserList}
+              />
+              <ProjectShowUsersCard
+                fetchShowUsers={fetchShowUsers}
+                setFetchShowUsers={setFetchShowUsers}
+                githubUserList={githubUserList}
+              />
             </div>
           )}
           {projectSelectView === 'setting' && (

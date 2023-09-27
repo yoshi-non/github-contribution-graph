@@ -1,7 +1,6 @@
-import { datasetState, githubUsers } from '@/store/atoms';
+import { dataset, githubUsers } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,7 +15,6 @@ import { Line } from 'react-chartjs-2';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { useDatasets } from '@/hooks/useDatasets';
-import { githubUsersState } from '@/store/githubUsersAtom';
 
 ChartJS.register(
   CategoryScale,
@@ -28,20 +26,18 @@ ChartJS.register(
   Legend
 );
 
-const ContributionGraph = () => {
-  const [githubUserList, setGitHubUserList] =
-    useRecoilState<githubUsers>(githubUsersState);
+type Props = {
+  githubUserList: githubUsers;
+};
 
+const ContributionGraph = ({ githubUserList }: Props) => {
   // データセット
-  const [datasets, setDatasets] =
-    useRecoilState(datasetState);
+  const [datasets, setDatasets] = useState<dataset>([]);
 
   useEffect(() => {
-    const asyncData = async () => {
-      if (githubUserList.length === 0) return;
+    if (githubUserList.length > 0) {
       setDatasets(useDatasets(githubUserList));
-    };
-    asyncData();
+    }
   }, [githubUserList]);
 
   const options = {
@@ -60,6 +56,7 @@ const ContributionGraph = () => {
     labels: githubUserList[0]?.contributionDateDuring,
     datasets: datasets,
   };
+
   return (
     <div className={styles.container}>
       {/* グラフ */}

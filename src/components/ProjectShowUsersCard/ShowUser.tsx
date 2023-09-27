@@ -10,12 +10,10 @@ import {
 import { db } from '@/lib/firebaseClient';
 import { useRecoilState } from 'recoil';
 import { githubUsers } from '@/store/atoms';
-import { githubUsersState } from '@/store/githubUsersAtom';
 import { ShowUserType } from '@/types/ShowUserType';
 import { useState } from 'react';
 import InputColor from 'react-input-color';
 import { memberCountState } from '@/store/memberCountAtoms';
-import { fetchShowUsersState } from '@/store/fetchShowUsersAtoms';
 
 const styles = {
   memberBody: css`
@@ -84,14 +82,21 @@ const styles = {
 type Props = {
   props: {
     showUser: ShowUserType;
+    fetchShowUsers: ShowUserType[];
+    setFetchShowUsers: React.Dispatch<
+      React.SetStateAction<ShowUserType[]>
+    >;
+    githubUserList: githubUsers;
   };
 };
 
 const ShowUser = ({ props }: Props) => {
-  const { showUser } = props;
-  const [githubUserList, setGitHubUserList] =
-    useRecoilState<githubUsers>(githubUsersState);
-
+  const {
+    showUser,
+    fetchShowUsers,
+    setFetchShowUsers,
+    githubUserList,
+  } = props;
   type Color = {
     a: number;
     b: number;
@@ -108,9 +113,6 @@ const ShowUser = ({ props }: Props) => {
 
   const [memberCount, setMemberCount] =
     useRecoilState<number>(memberCountState);
-
-  const [fetchShowUsers, setFetchShowUsers] =
-    useRecoilState(fetchShowUsersState);
 
   const changeColorShowUser = async () => {
     setFetchShowUsers(
