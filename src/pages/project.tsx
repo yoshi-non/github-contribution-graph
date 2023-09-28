@@ -110,7 +110,7 @@ const Project = () => {
       }
     };
     fetchShowUsersAsync();
-  }, [setFetchProject, memberCount]);
+  }, [projectId, setFetchProject, memberCount]);
 
   useEffect(() => {
     const asyncData = async () => {
