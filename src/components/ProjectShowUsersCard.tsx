@@ -15,6 +15,7 @@ import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
 import { githubUsers } from '@/store/atoms';
 import ModalInput from './ProjectShowUsersCard/ModalInput';
 import ModalLayout from '@/layout/ModalLayout';
+import { useUpdateColor } from '@/hooks/useUpdateColor';
 
 const styles = {
   container: css`
@@ -95,6 +96,20 @@ const styles = {
     background-color: #fff;
     border: 1px solid #ddd;
     font-weight: bold;
+  `,
+  changeAllButton: css`
+    color: #fff;
+    background-color: #333;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    &:hover {
+      opacity: 0.8;
+    }
   `,
 };
 
@@ -224,6 +239,22 @@ const ProjectShowUsersCard = ({
     setGithubId('');
   };
 
+  const changeAllColorsHandler = () => {
+    const updateFetchShowUsers = fetchShowUsers.map(
+      (user) => {
+        const randomColor = Math.floor(
+          Math.random() * 16777215
+        ).toString(16);
+        useUpdateColor(user, `#${randomColor}`);
+        return {
+          ...user,
+          color: `#${randomColor}`,
+        };
+      }
+    );
+    setFetchShowUsers(updateFetchShowUsers);
+  };
+
   return (
     <div css={styles.container}>
       <div css={styles.topbar}>
@@ -295,6 +326,12 @@ const ProjectShowUsersCard = ({
       <div css={styles.memberWrapper}>
         <div css={styles.memberHead}>
           <span>Members</span>
+          <button
+            css={styles.changeAllButton}
+            onClick={changeAllColorsHandler}
+          >
+            Change All Colors
+          </button>
         </div>
         {fetchShowUsers?.map((showUser) => (
           <ShowUser

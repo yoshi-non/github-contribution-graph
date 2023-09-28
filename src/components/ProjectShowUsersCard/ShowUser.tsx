@@ -2,11 +2,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Image from 'next/image';
 import Link from 'next/link';
 import { css } from '@emotion/react';
-import {
-  deleteDoc,
-  doc,
-  updateDoc,
-} from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebaseClient';
 import { useRecoilState } from 'recoil';
 import { githubUsers } from '@/store/atoms';
@@ -14,6 +10,7 @@ import { ShowUserType } from '@/types/ShowUserType';
 import { useState } from 'react';
 import InputColor from 'react-input-color';
 import { memberCountState } from '@/store/memberCountAtoms';
+import { useUpdateColor } from '@/hooks/useUpdateColor';
 
 const styles = {
   memberBody: css`
@@ -126,10 +123,7 @@ const ShowUser = ({ props }: Props) => {
         return user;
       })
     );
-    const ref = doc(db, `showUsers/${showUser.id}`);
-    await updateDoc(ref, {
-      color: color?.hex || '#fff',
-    });
+    useUpdateColor(showUser, color?.hex || '#fff');
   };
 
   const deleteShowUser = async (showUserId: string) => {
