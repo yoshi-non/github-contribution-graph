@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import { useState } from 'react';
-import Modal from 'react-modal';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
@@ -10,13 +9,12 @@ import { createShowUserHandler } from '@/lib/firebase/createShowUserHandler';
 import ShowUser from './ProjectShowUsersCard/ShowUser';
 import { ShowUserType } from '@/types/ShowUserType';
 import { memberCountState } from '@/store/memberCountAtoms';
-import { motion } from 'framer-motion';
-import { fadeIn } from '@/lib/framerMotion/variants';
 import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
 import { githubUsers } from '@/store/atoms';
 import ModalInput from './ProjectShowUsersCard/ModalInput';
+import ModalLayout from '@/layout/ModalLayout';
 
 const styles = {
   container: css`
@@ -83,31 +81,6 @@ const styles = {
       opacity: 0.8;
     }
   `,
-  modal: css`
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    max-width: 500px;
-  `,
-  modalContent: css`
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 2rem;
-    border: 1px solid #ddd;
-    h2 {
-      font-size: 1.2rem;
-      font-weight: bold;
-      text-align: center;
-    }
-  `,
   memberWrapper: css`
     margin-top: 1rem;
     display: flex;
@@ -140,7 +113,7 @@ const ProjectShowUsersCard = ({
 }: Props) => {
   const router = useRouter();
   const { id } = router.query;
-  const { fbUser, isLoading } = useAuth();
+  const { fbUser } = useAuth();
 
   const [addMemberModalIsOpen, setAddMemberModalIsOpen] =
     useState<boolean>(false);
@@ -263,92 +236,60 @@ const ProjectShowUsersCard = ({
             <SystemUpdateAltIcon />
             <span>Export</span>
           </button>
-          <Modal
+          <ModalLayout
             isOpen={exportMemberModalIsOpen}
             onRequestClose={closeExportMemberModal}
-            appElement={
-              typeof window !== 'undefined'
-                ? (document.getElementById(
-                    '__next'
-                  ) as HTMLElement)
-                : undefined
-            }
-            css={styles.modal}
           >
-            <motion.div
-              css={styles.modalContent}
-              initial="hidden"
-              animate="visible"
-              variants={fadeIn}
-            >
-              <h2>Export Member to {fetchProject?.name}</h2>
-              {exportSelectText === 'Orgs' && (
-                <ModalInput
-                  title="オーガニゼーションから一括エクスポート"
-                  placeholder="GitHub Organization Id (ex: laravel)"
-                  setExportSelectTextHandler={() =>
-                    setExportSelectText('Repos')
-                  }
-                  value={githubOrgId}
-                  setGithubId={setGithubOrgId}
-                  addMemberHandler={exportOrgMembersHandler}
-                  closeModalHandler={closeExportMemberModal}
-                  linkText="レポジトリから一括で追加する"
-                />
-              )}
-              {exportSelectText === 'Repos' && (
-                <ModalInput
-                  title="レポジトリから一括エクスポート"
-                  placeholder="GitHub Repository Id (ex: laravel/breeze)"
-                  setExportSelectTextHandler={() =>
-                    setExportSelectText('Orgs')
-                  }
-                  value={githubRepoId}
-                  setGithubId={setGithubRepoId}
-                  addMemberHandler={
-                    exportRepoMembersHandler
-                  }
-                  closeModalHandler={closeExportMemberModal}
-                  linkText="オーガニゼーションから一括で追加する"
-                />
-              )}
-            </motion.div>
-          </Modal>
+            <h2>Export Member to {fetchProject?.name}</h2>
+            {exportSelectText === 'Orgs' && (
+              <ModalInput
+                title="オーガニゼーションから一括エクスポート"
+                placeholder="GitHub Organization Id (ex: laravel)"
+                setExportSelectTextHandler={() =>
+                  setExportSelectText('Repos')
+                }
+                value={githubOrgId}
+                setGithubId={setGithubOrgId}
+                addMemberHandler={exportOrgMembersHandler}
+                closeModalHandler={closeExportMemberModal}
+                linkText="レポジトリから一括で追加する"
+              />
+            )}
+            {exportSelectText === 'Repos' && (
+              <ModalInput
+                title="レポジトリから一括エクスポート"
+                placeholder="GitHub Repository Id (ex: laravel/breeze)"
+                setExportSelectTextHandler={() =>
+                  setExportSelectText('Orgs')
+                }
+                value={githubRepoId}
+                setGithubId={setGithubRepoId}
+                addMemberHandler={exportRepoMembersHandler}
+                closeModalHandler={closeExportMemberModal}
+                linkText="オーガニゼーションから一括で追加する"
+              />
+            )}
+          </ModalLayout>
           <button
             css={styles.addMemberButton}
             onClick={() => setAddMemberModalIsOpen(true)}
           >
             Add Member
           </button>
-          <Modal
+          <ModalLayout
             isOpen={addMemberModalIsOpen}
             onRequestClose={closeAddMemberModal}
-            appElement={
-              typeof window !== 'undefined'
-                ? (document.getElementById(
-                    '__next'
-                  ) as HTMLElement)
-                : undefined
-            }
-            css={styles.modal}
           >
-            <motion.div
-              css={styles.modalContent}
-              initial="hidden"
-              animate="visible"
-              variants={fadeIn}
-            >
-              <h2>Add Member to {fetchProject?.name}</h2>
-              <ModalInput
-                title="GitHub Idから追加"
-                placeholder="GitHub User Id"
-                value={githubId}
-                setGithubId={setGithubId}
-                addMemberHandler={addMemberHandler}
-                closeModalHandler={closeAddMemberModal}
-              />
-            </motion.div>
-          </Modal>
+            <h2>Add Member to {fetchProject?.name}</h2>
+            <ModalInput
+              title="GitHub Idから追加"
+              placeholder="GitHub User Id"
+              value={githubId}
+              setGithubId={setGithubId}
+              addMemberHandler={addMemberHandler}
+              closeModalHandler={closeAddMemberModal}
+            />
+          </ModalLayout>
         </div>
       </div>
       <div css={styles.memberWrapper}>
