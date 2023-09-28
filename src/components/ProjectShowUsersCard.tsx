@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import { useState } from 'react';
 import Modal from 'react-modal';
-import CloseIcon from '@mui/icons-material/Close';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
@@ -17,6 +16,7 @@ import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
 import { githubUsers } from '@/store/atoms';
+import ModalInput from './ProjectShowUsersCard/ModalInput';
 
 const styles = {
   container: css`
@@ -72,12 +72,6 @@ const styles = {
       font-size: 1rem;
     }
   `,
-  exportTitle: css`
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    text-align: center;
-  `,
   addMemberButton: css`
     font-weight: bold;
     background-color: #26a641;
@@ -112,38 +106,6 @@ const styles = {
       font-size: 1.2rem;
       font-weight: bold;
       text-align: center;
-    }
-  `,
-  addMemberInputBox: css`
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  `,
-  addMemberInput: css`
-    width: 100%;
-    padding: 0.5rem 1rem;
-    outline: 1px solid #ddd;
-    border-radius: 10px;
-  `,
-  closeButton: css`
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.5rem;
-    transition: all 0.2s;
-    &:hover {
-      opacity: 0.8;
-    }
-  `,
-  modalHref: css`
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #1f6feb;
-    text-align: center;
-    margin-top: 1rem;
-    transition: all 0.2s;
-    &:hover {
-      opacity: 0.8;
     }
   `,
   memberWrapper: css`
@@ -292,12 +254,7 @@ const ProjectShowUsersCard = ({
   return (
     <div css={styles.container}>
       <div css={styles.topbar}>
-        <div>
-          {/* <input
-            type="text"
-            placeholder="Find a member..."
-          /> */}
-        </div>
+        <div></div>
         <div css={styles.buttonBox}>
           <button
             css={styles.exportButton}
@@ -326,82 +283,34 @@ const ProjectShowUsersCard = ({
             >
               <h2>Export Member to {fetchProject?.name}</h2>
               {exportSelectText === 'Orgs' && (
-                <div>
-                  <p css={styles.exportTitle}>
-                    オーガニゼーションから一括エクスポート
-                  </p>
-                  <div css={styles.addMemberInputBox}>
-                    <input
-                      css={styles.addMemberInput}
-                      placeholder="GitHub Organization Id"
-                      type="search"
-                      onChange={(e) =>
-                        setGithubOrgId(e.target.value)
-                      }
-                      value={githubOrgId}
-                    />
-                    <button
-                      css={styles.addMemberButton}
-                      onClick={exportOrgMembersHandler}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <button
-                    onClick={closeExportMemberModal}
-                    css={styles.closeButton}
-                  >
-                    <CloseIcon />
-                  </button>
-                  <div css={styles.modalHref}>
-                    <a
-                      onClick={() =>
-                        setExportSelectText('Repos')
-                      }
-                    >
-                      レポジトリから一括で追加する
-                    </a>
-                  </div>
-                </div>
+                <ModalInput
+                  title="オーガニゼーションから一括エクスポート"
+                  placeholder="GitHub Organization Id (ex: laravel)"
+                  setExportSelectTextHandler={() =>
+                    setExportSelectText('Repos')
+                  }
+                  value={githubOrgId}
+                  setGithubId={setGithubOrgId}
+                  addMemberHandler={exportOrgMembersHandler}
+                  closeModalHandler={closeExportMemberModal}
+                  linkText="レポジトリから一括で追加する"
+                />
               )}
               {exportSelectText === 'Repos' && (
-                <div>
-                  <p css={styles.exportTitle}>
-                    レポジトリから一括エクスポート
-                  </p>
-                  <div css={styles.addMemberInputBox}>
-                    <input
-                      css={styles.addMemberInput}
-                      placeholder="GitHub Repository Id"
-                      type="search"
-                      onChange={(e) =>
-                        setGithubRepoId(e.target.value)
-                      }
-                      value={githubRepoId}
-                    />
-                    <button
-                      css={styles.addMemberButton}
-                      onClick={exportRepoMembersHandler}
-                    >
-                      Add
-                    </button>
-                  </div>
-                  <button
-                    onClick={closeExportMemberModal}
-                    css={styles.closeButton}
-                  >
-                    <CloseIcon />
-                  </button>
-                  <div css={styles.modalHref}>
-                    <a
-                      onClick={() =>
-                        setExportSelectText('Orgs')
-                      }
-                    >
-                      オーガニゼーションから一括で追加する
-                    </a>
-                  </div>
-                </div>
+                <ModalInput
+                  title="レポジトリから一括エクスポート"
+                  placeholder="GitHub Repository Id (ex: laravel/breeze)"
+                  setExportSelectTextHandler={() =>
+                    setExportSelectText('Orgs')
+                  }
+                  value={githubRepoId}
+                  setGithubId={setGithubRepoId}
+                  addMemberHandler={
+                    exportRepoMembersHandler
+                  }
+                  closeModalHandler={closeExportMemberModal}
+                  linkText="オーガニゼーションから一括で追加する"
+                />
               )}
             </motion.div>
           </Modal>
@@ -430,29 +339,14 @@ const ProjectShowUsersCard = ({
               variants={fadeIn}
             >
               <h2>Add Member to {fetchProject?.name}</h2>
-              <div css={styles.addMemberInputBox}>
-                <input
-                  css={styles.addMemberInput}
-                  placeholder="GitHub User Id"
-                  type="search"
-                  onChange={(e) =>
-                    setGithubId(e.target.value)
-                  }
-                  value={githubId}
-                />
-                <button
-                  css={styles.addMemberButton}
-                  onClick={addMemberHandler}
-                >
-                  Add
-                </button>
-              </div>
-              <button
-                onClick={closeAddMemberModal}
-                css={styles.closeButton}
-              >
-                <CloseIcon />
-              </button>
+              <ModalInput
+                title="GitHub Idから追加"
+                placeholder="GitHub User Id"
+                value={githubId}
+                setGithubId={setGithubId}
+                addMemberHandler={addMemberHandler}
+                closeModalHandler={closeAddMemberModal}
+              />
             </motion.div>
           </Modal>
         </div>
