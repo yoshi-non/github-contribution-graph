@@ -1,4 +1,4 @@
-import { ResponseContributionObject } from '@/store/atoms';
+import { ResponseContributionObject } from '@/types/GitHubApiType';
 
 export const useDateDuring = async () => {
   const response = (await fetch(
