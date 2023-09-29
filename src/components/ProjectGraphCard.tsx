@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import ContributionGraph from './ProjectGraphCard/ContributionGraph';
-import { githubUsers } from '@/store/atoms';
+import { githubUsers } from '@/types/GitHubApiType';
 
 const styles = {
   container: css`

@@ -19,7 +19,7 @@ const styles = {
 };
 
 const CreateProjectBox = () => {
-  const { fbUser, isLoading } = useAuth();
+  const { fbUser } = useAuth();
   const router = useRouter();
 
   // Project作成 (Graph)

@@ -5,12 +5,12 @@ import { css } from '@emotion/react';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebaseClient';
 import { useRecoilState } from 'recoil';
-import { githubUsers } from '@/store/atoms';
 import { ShowUserType } from '@/types/ShowUserType';
 import { useState } from 'react';
 import InputColor from 'react-input-color';
 import { memberCountState } from '@/store/memberCountAtoms';
 import { useUpdateColor } from '@/hooks/useUpdateColor';
+import { githubUsers } from '@/types/GitHubApiType';
 
 const styles = {
   memberBody: css`

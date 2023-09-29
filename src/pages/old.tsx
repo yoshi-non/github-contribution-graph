@@ -1,4 +1,3 @@
-import { dataset, githubUsers } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import {
@@ -20,6 +19,8 @@ import Image from 'next/image';
 import { useDatasets } from '@/hooks/useDatasets';
 import { useGithubUsers } from '@/hooks/useGithubUsers';
 import { defaultGithubUsers } from '@/githubUsers';
+import { githubUsers } from '@/types/GitHubApiType';
+import { dataset } from '@/types/DatasetType';
 
 ChartJS.register(
   CategoryScale,

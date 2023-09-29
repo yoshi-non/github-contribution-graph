@@ -1,5 +1,4 @@
 import { useAuth } from '@/context/auth';
-import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { projectSelectViewState } from '@/store/projectSelectViewAtoms';
 import { css } from '@emotion/react';
 import { useRecoilState } from 'recoil';
