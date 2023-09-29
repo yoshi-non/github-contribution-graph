@@ -100,9 +100,10 @@ const styles = {
 type Props = {
   mainPath?: string;
   crrPath?: string;
+  isPublic?: boolean;
 };
 
-const Topbar = ({ mainPath, crrPath }: Props) => {
+const Topbar = ({ mainPath, crrPath, isPublic }: Props) => {
   const { fbUser } = useAuth();
   const router = useRouter();
   const { id } = router.query;
@@ -138,17 +139,23 @@ const Topbar = ({ mainPath, crrPath }: Props) => {
         {id && (
           <div>
             <span>&nbsp;/&nbsp;</span>
-            <input
-              css={styles.projectNameInput}
-              value={projectName}
-              onChange={(e) =>
-                setProjectName(e.target.value)
-              }
-              onBlur={(e) => {
-                updateProjectName(e.target.value);
-              }}
-              placeholder="プロジェクト名"
-            />
+            {isPublic ? (
+              <span css={styles.projectNameInput}>
+                {projectName}
+              </span>
+            ) : (
+              <input
+                css={styles.projectNameInput}
+                value={projectName}
+                onChange={(e) =>
+                  setProjectName(e.target.value)
+                }
+                onBlur={(e) => {
+                  updateProjectName(e.target.value);
+                }}
+                placeholder="プロジェクト名"
+              />
+            )}
           </div>
         )}
       </div>

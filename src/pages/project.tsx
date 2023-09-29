@@ -1,6 +1,4 @@
 import ProjectSetting from '@/components/Project/ProjectSetting';
-import DeleteProjectCard from '@/components/Project/Setting/DeleteProjectCard';
-import IsPublicProjectCard from '@/components/Project/Setting/ChangeVisibilityProjectCard';
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
@@ -62,16 +60,18 @@ const Project = () => {
   const { fbUser, isLoading } = useAuth();
   const router = useRouter();
 
+  const [fetchProject, setFetchProject] = useRecoilState(
+    fetchProjectState
+  );
   useEffect(() => {
-    if (!isLoading && !fbUser) {
-      router.push('/');
+    if (fetchProject?.isPublic === false) {
+      if (!isLoading && !fbUser) {
+        router.push('/');
+      }
     }
   }, [fbUser, isLoading, router]);
   const { id } = router.query;
   const projectId = id as string | undefined;
-  const [fetchProject, setFetchProject] = useRecoilState(
-    fetchProjectState
-  );
   const [fetchShowUsers, setFetchShowUsers] = useState<
     ShowUserType[]
   >([]);
@@ -123,42 +123,86 @@ const Project = () => {
     asyncData();
   }, [fetchShowUsers]);
 
-  if (
-    !fbUser ||
-    isLoading ||
-    typeof projectId !== 'string'
-  ) {
-    return null;
+  if (!projectId) return null;
+
+  if (fetchProject?.isPublic === false) {
+    if (!fbUser || isLoading) {
+      return null;
+    }
   }
 
+  const isPublic =
+    fetchProject?.isPublic === true &&
+    fbUser?.uid !== fetchProject.ownerId;
+
   return (
-    <div css={styles.container}>
-      <div css={styles.topContent}>
-        <SidebarTitle />
-        <Topbar crrPath={fetchProject?.name} />
-      </div>
-      <div css={styles.mainWrapper}>
-        {isOpenSidebar && <Sidebar />}
-        <div css={styles.projectWrapper}>
-          <ProjectNavbar ownerId={fetchProject?.ownerId} />
-          {projectSelectView === 'graph' && (
-            <div>
-              <ProjectGraphCard
-                githubUserList={githubUserList}
+    <>
+      {isPublic ? (
+        // プロジェクトが公開かつ作成者以外
+        <div css={styles.container}>
+          <div css={styles.topContent}>
+            <Topbar
+              crrPath={fetchProject?.name}
+              isPublic={isPublic}
+            />
+          </div>
+          <div css={styles.mainWrapper}>
+            <div css={styles.projectWrapper}>
+              <ProjectNavbar
+                ownerId={fetchProject?.ownerId}
               />
-              <ProjectShowUsersCard
-                fetchShowUsers={fetchShowUsers}
-                setFetchShowUsers={setFetchShowUsers}
-                githubUserList={githubUserList}
-              />
+              {projectSelectView === 'graph' && (
+                <div>
+                  <ProjectGraphCard
+                    githubUserList={githubUserList}
+                  />
+                  <ProjectShowUsersCard
+                    fetchShowUsers={fetchShowUsers}
+                    setFetchShowUsers={setFetchShowUsers}
+                    githubUserList={githubUserList}
+                    isPublic={isPublic}
+                  />
+                </div>
+              )}
+              {projectSelectView === 'setting' && (
+                <ProjectSetting projectId={projectId} />
+              )}
             </div>
-          )}
-          {projectSelectView === 'setting' && (
-            <ProjectSetting projectId={projectId} />
-          )}
+          </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        // プロジェクトが非公開
+        <div css={styles.container}>
+          <div css={styles.topContent}>
+            <SidebarTitle />
+            <Topbar crrPath={fetchProject?.name} />
+          </div>
+          <div css={styles.mainWrapper}>
+            {isOpenSidebar && <Sidebar />}
+            <div css={styles.projectWrapper}>
+              <ProjectNavbar
+                ownerId={fetchProject?.ownerId}
+              />
+              {projectSelectView === 'graph' && (
+                <div>
+                  <ProjectGraphCard
+                    githubUserList={githubUserList}
+                  />
+                  <ProjectShowUsersCard
+                    fetchShowUsers={fetchShowUsers}
+                    setFetchShowUsers={setFetchShowUsers}
+                    githubUserList={githubUserList}
+                  />
+                </div>
+              )}
+              {projectSelectView === 'setting' && (
+                <ProjectSetting projectId={projectId} />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
