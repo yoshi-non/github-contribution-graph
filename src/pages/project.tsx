@@ -1,4 +1,6 @@
+import ProjectSetting from '@/components/Project/ProjectSetting';
 import DeleteProjectCard from '@/components/Project/Setting/DeleteProjectCard';
+import IsPublicProjectCard from '@/components/Project/Setting/ChangeVisibilityProjectCard';
 import ProjectGraphCard from '@/components/ProjectGraphCard';
 import ProjectNavbar from '@/components/ProjectNavbar';
 import ProjectShowUsersCard from '@/components/ProjectShowUsersCard';
@@ -152,9 +154,7 @@ const Project = () => {
             </div>
           )}
           {projectSelectView === 'setting' && (
-            <div>
-              <DeleteProjectCard projectId={projectId} />
-            </div>
+            <ProjectSetting projectId={projectId} />
           )}
         </div>
       </div>
