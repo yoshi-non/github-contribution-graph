@@ -1,7 +1,7 @@
 import {
   ResponseContributionObject,
   githubUsers,
-} from '@/store/atoms';
+} from '@/types/GitHubApiType';
 import { useContributions } from './useContributions';
 import { ShowUserType } from '@/types/ShowUserType';
 
