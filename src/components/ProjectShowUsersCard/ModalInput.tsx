@@ -18,6 +18,10 @@ const styles = {
     padding: 0.5rem 1rem;
     outline: 1px solid #ddd;
     border-radius: 10px;
+    &::-webkit-search-cancel-button {
+      cursor: pointer;
+      padding: 0.2rem;
+    }
   `,
   addButton: css`
     font-weight: bold;
