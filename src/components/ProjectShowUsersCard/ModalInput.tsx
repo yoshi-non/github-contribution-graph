@@ -88,6 +88,11 @@ const ModalInput = ({
           type="search"
           onChange={(e) => setGithubId(e.target.value)}
           value={value}
+          ref={(input) => {
+            if (input) {
+              input.focus(); // モーダルが開かれたらinput要素にフォーカスを当てる
+            }
+          }}
         />
         <button
           css={styles.addButton}
