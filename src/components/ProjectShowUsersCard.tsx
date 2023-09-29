@@ -12,10 +12,10 @@ import { memberCountState } from '@/store/memberCountAtoms';
 import { useGithubOrgMembers } from '@/hooks/useGithubOrgMembers';
 import { useCheckGithubId } from '@/hooks/useCheckGithubId';
 import { useGithubRepoMembers } from '@/hooks/useGithubRepoMembers';
-import { githubUsers } from '@/store/atoms';
 import ModalInput from './ProjectShowUsersCard/ModalInput';
 import ModalLayout from '@/layout/ModalLayout';
 import { useUpdateColor } from '@/hooks/useUpdateColor';
+import { githubUsers } from '@/types/GitHubApiType';
 
 const styles = {
   container: css`

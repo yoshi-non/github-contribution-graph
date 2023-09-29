@@ -23,10 +23,3 @@ export type githubUsers = {
   color: string;
   contributionDateDuring?: string[];
 }[];
-
-export type dataset = {
-  label: string;
-  data: (number | undefined)[];
-  borderColor: string;
-  backgroundColor: string;
-}[];

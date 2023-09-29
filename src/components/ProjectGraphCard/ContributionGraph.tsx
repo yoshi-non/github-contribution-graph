@@ -1,4 +1,3 @@
-import { dataset, githubUsers } from '@/store/atoms';
 import styles from '@/styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import {
@@ -15,6 +14,8 @@ import { Line } from 'react-chartjs-2';
 import AspectRatio from '@mui/joy/AspectRatio';
 import { CssVarsProvider } from '@mui/joy/styles';
 import { useDatasets } from '@/hooks/useDatasets';
+import { githubUsers } from '@/types/GitHubApiType';
+import { dataset } from '@/types/DatasetType';
 
 ChartJS.register(
   CategoryScale,
