@@ -170,6 +170,7 @@ const ProjectShowUsersCard = ({
     createShowUserHandler(showUser, router);
     setMemberCount(memberCount + 1);
     setAddMemberModalIsOpen(false);
+    setGithubId('');
   };
 
   const exportOrgMembersHandler = async () => {
@@ -199,6 +200,8 @@ const ProjectShowUsersCard = ({
     });
     setMemberCount(memberCount + 1);
     setExportMemberModalIsOpen(false);
+    setGithubOrgId('');
+    setGithubRepoId('');
   };
 
   const exportRepoMembersHandler = async () => {
@@ -228,10 +231,14 @@ const ProjectShowUsersCard = ({
     });
     setMemberCount(memberCount + 1);
     setExportMemberModalIsOpen(false);
+    setGithubOrgId('');
+    setGithubRepoId('');
   };
 
   const closeExportMemberModal = () => {
     setExportMemberModalIsOpen(false);
+    setGithubOrgId('');
+    setGithubRepoId('');
   };
 
   const closeAddMemberModal = () => {
