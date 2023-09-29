@@ -2,8 +2,10 @@ import { useUpdateIsPublic } from '@/hooks/useUpdateIsPublic';
 import { fetchProjectState } from '@/store/fetchProjectAtoms';
 import { NonIdProjectType } from '@/types/ProjectType';
 import { css } from '@emotion/react';
-import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useState } from 'react';
+import DoneIcon from '@mui/icons-material/Done';
 
 const styles = {
   container: css`
@@ -16,11 +18,15 @@ const styles = {
   `,
   wrapper: css`
     display: flex;
-    align-items: center;
     gap: 1rem;
     padding: 0.5rem 1rem;
     border: 2px solid #c9d1d9;
     border-radius: 10px;
+  `,
+  publicWrapper: css`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   `,
   updateVisibilityWrapper: css`
     width: 100%;
@@ -40,6 +46,22 @@ const styles = {
       color: #fff;
     }
   `,
+  copyWrapper: css`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    background-color: #c9d1d9;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    color: #333;
+    button {
+      border: none;
+      padding: 0.5rem;
+    }
+  `,
 };
 
 type Props = {
@@ -49,8 +71,8 @@ type Props = {
 const ChangeVisibilityProjectCard = ({
   projectId,
 }: Props) => {
-  const router = useRouter();
-  const pathName = router.asPath;
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+  const pathName = window.location.href;
   const [fetchProject, setFetchProject] =
     useRecoilState<NonIdProjectType | null>(
       fetchProjectState
@@ -71,7 +93,11 @@ const ChangeVisibilityProjectCard = ({
   };
 
   const copyHandler = () => {
+    setIsCopied(true);
     navigator.clipboard.writeText(pathName);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
   };
 
   if (!fetchProject) return null;
@@ -81,8 +107,8 @@ const ChangeVisibilityProjectCard = ({
       <h2 css={styles.title}>Visibility Setting</h2>
       <div css={styles.wrapper}>
         {fetchProject.isPublic ? (
-          <div css={styles.updateVisibilityWrapper}>
-            <div>
+          <div css={styles.publicWrapper}>
+            <div css={styles.updateVisibilityWrapper}>
               <div>
                 <h3>Change Visibility Project</h3>
                 <p>This project is currently public.</p>
@@ -96,15 +122,15 @@ const ChangeVisibilityProjectCard = ({
                 Change Visibility
               </button>
             </div>
-            <div>
-              <p>
-                This project is currently public to anyone
-                with the link:
-              </p>
-              <p>
-                <span>{pathName}</span>
-                <button onClick={copyHandler}>Copy</button>
-              </p>
+            <div css={styles.copyWrapper}>
+              <p>{pathName}</p>
+              <button onClick={copyHandler}>
+                {isCopied ? (
+                  <DoneIcon />
+                ) : (
+                  <ContentCopyIcon />
+                )}
+              </button>
             </div>
           </div>
         ) : (
