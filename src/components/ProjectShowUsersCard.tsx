@@ -119,12 +119,14 @@ type Props = {
     React.SetStateAction<ShowUserType[]>
   >;
   githubUserList: githubUsers;
+  isPublic?: boolean;
 };
 
 const ProjectShowUsersCard = ({
   fetchShowUsers,
   setFetchShowUsers,
   githubUserList,
+  isPublic,
 }: Props) => {
   const router = useRouter();
   const { id } = router.query;
@@ -264,81 +266,89 @@ const ProjectShowUsersCard = ({
 
   return (
     <div css={styles.container}>
-      <div css={styles.topbar}>
-        <div></div>
-        <div css={styles.buttonBox}>
-          <button
-            css={styles.exportButton}
-            onClick={() => setExportMemberModalIsOpen(true)}
-          >
-            <SystemUpdateAltIcon />
-            <span>Export</span>
-          </button>
-          <ModalLayout
-            isOpen={exportMemberModalIsOpen}
-            onRequestClose={closeExportMemberModal}
-          >
-            <h2>Export Member to {fetchProject?.name}</h2>
-            {exportSelectText === 'Orgs' && (
+      {!isPublic && (
+        <div css={styles.topbar}>
+          <div></div>
+          <div css={styles.buttonBox}>
+            <button
+              css={styles.exportButton}
+              onClick={() =>
+                setExportMemberModalIsOpen(true)
+              }
+            >
+              <SystemUpdateAltIcon />
+              <span>Export</span>
+            </button>
+            <ModalLayout
+              isOpen={exportMemberModalIsOpen}
+              onRequestClose={closeExportMemberModal}
+            >
+              <h2>Export Member to {fetchProject?.name}</h2>
+              {exportSelectText === 'Orgs' && (
+                <ModalInput
+                  title="オーガニゼーションから一括エクスポート"
+                  placeholder="GitHub Organization Id (ex: laravel)"
+                  setExportSelectTextHandler={() =>
+                    setExportSelectText('Repos')
+                  }
+                  value={githubOrgId}
+                  setGithubId={setGithubOrgId}
+                  addMemberHandler={exportOrgMembersHandler}
+                  closeModalHandler={closeExportMemberModal}
+                  linkText="レポジトリから一括で追加する"
+                />
+              )}
+              {exportSelectText === 'Repos' && (
+                <ModalInput
+                  title="レポジトリから一括エクスポート"
+                  placeholder="GitHub Repository Id (ex: laravel/breeze)"
+                  setExportSelectTextHandler={() =>
+                    setExportSelectText('Orgs')
+                  }
+                  value={githubRepoId}
+                  setGithubId={setGithubRepoId}
+                  addMemberHandler={
+                    exportRepoMembersHandler
+                  }
+                  closeModalHandler={closeExportMemberModal}
+                  linkText="オーガニゼーションから一括で追加する"
+                />
+              )}
+            </ModalLayout>
+            <button
+              css={styles.addMemberButton}
+              onClick={() => setAddMemberModalIsOpen(true)}
+            >
+              Add Member
+            </button>
+            <ModalLayout
+              isOpen={addMemberModalIsOpen}
+              onRequestClose={closeAddMemberModal}
+            >
+              <h2>Add Member to {fetchProject?.name}</h2>
               <ModalInput
-                title="オーガニゼーションから一括エクスポート"
-                placeholder="GitHub Organization Id (ex: laravel)"
-                setExportSelectTextHandler={() =>
-                  setExportSelectText('Repos')
-                }
-                value={githubOrgId}
-                setGithubId={setGithubOrgId}
-                addMemberHandler={exportOrgMembersHandler}
-                closeModalHandler={closeExportMemberModal}
-                linkText="レポジトリから一括で追加する"
+                title="GitHub Idから追加"
+                placeholder="GitHub User Id"
+                value={githubId}
+                setGithubId={setGithubId}
+                addMemberHandler={addMemberHandler}
+                closeModalHandler={closeAddMemberModal}
               />
-            )}
-            {exportSelectText === 'Repos' && (
-              <ModalInput
-                title="レポジトリから一括エクスポート"
-                placeholder="GitHub Repository Id (ex: laravel/breeze)"
-                setExportSelectTextHandler={() =>
-                  setExportSelectText('Orgs')
-                }
-                value={githubRepoId}
-                setGithubId={setGithubRepoId}
-                addMemberHandler={exportRepoMembersHandler}
-                closeModalHandler={closeExportMemberModal}
-                linkText="オーガニゼーションから一括で追加する"
-              />
-            )}
-          </ModalLayout>
-          <button
-            css={styles.addMemberButton}
-            onClick={() => setAddMemberModalIsOpen(true)}
-          >
-            Add Member
-          </button>
-          <ModalLayout
-            isOpen={addMemberModalIsOpen}
-            onRequestClose={closeAddMemberModal}
-          >
-            <h2>Add Member to {fetchProject?.name}</h2>
-            <ModalInput
-              title="GitHub Idから追加"
-              placeholder="GitHub User Id"
-              value={githubId}
-              setGithubId={setGithubId}
-              addMemberHandler={addMemberHandler}
-              closeModalHandler={closeAddMemberModal}
-            />
-          </ModalLayout>
+            </ModalLayout>
+          </div>
         </div>
-      </div>
+      )}
       <div css={styles.memberWrapper}>
         <div css={styles.memberHead}>
           <span>Members</span>
-          <button
-            css={styles.changeAllButton}
-            onClick={changeAllColorsHandler}
-          >
-            Change All Colors
-          </button>
+          {!isPublic && (
+            <button
+              css={styles.changeAllButton}
+              onClick={changeAllColorsHandler}
+            >
+              Change All Colors
+            </button>
+          )}
         </div>
         {fetchShowUsers?.map((showUser) => (
           <ShowUser
@@ -348,6 +358,7 @@ const ProjectShowUsersCard = ({
               fetchShowUsers,
               setFetchShowUsers,
               githubUserList,
+              isPublic,
             }}
           />
         ))}

@@ -76,6 +76,14 @@ const styles = {
   `,
 };
 
+const userColorCSS = (color: string) => css`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: ${color};
+  border: 2px solid #ddd;
+`;
+
 type Props = {
   props: {
     showUser: ShowUserType;
@@ -84,6 +92,7 @@ type Props = {
       React.SetStateAction<ShowUserType[]>
     >;
     githubUserList: githubUsers;
+    isPublic?: boolean;
   };
 };
 
@@ -93,6 +102,7 @@ const ShowUser = ({ props }: Props) => {
     fetchShowUsers,
     setFetchShowUsers,
     githubUserList,
+    isPublic,
   } = props;
   type Color = {
     a: number;
@@ -158,23 +168,29 @@ const ShowUser = ({ props }: Props) => {
           </p>
         </div>
       </div>
-      <div css={styles.memberSettingButtonBox}>
-        <button
-          css={[styles.changeColorButton]}
-          onBlur={() => changeColorShowUser()}
-        >
-          <InputColor
-            initialValue={showUser.color}
-            onChange={setColor}
-          />
-        </button>
-        <button
-          css={styles.deleteButton}
-          onClick={() => deleteShowUser(showUser.id)}
-        >
-          <DeleteForeverIcon />
-        </button>
-      </div>
+      {isPublic ? (
+        <div css={userColorCSS(showUser.color)}>
+          {/* カラー */}
+        </div>
+      ) : (
+        <div css={styles.memberSettingButtonBox}>
+          <button
+            css={[styles.changeColorButton]}
+            onBlur={() => changeColorShowUser()}
+          >
+            <InputColor
+              initialValue={showUser.color}
+              onChange={setColor}
+            />
+          </button>
+          <button
+            css={styles.deleteButton}
+            onClick={() => deleteShowUser(showUser.id)}
+          >
+            <DeleteForeverIcon />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
