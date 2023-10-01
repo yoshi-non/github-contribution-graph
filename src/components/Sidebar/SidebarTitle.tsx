@@ -46,7 +46,12 @@ const styles = {
   `,
 };
 
-const SidebarTitle = () => {
+type Props = {
+  isPublic?: boolean;
+};
+
+const SidebarTitle = ({ isPublic }: Props) => {
+  if (isPublic) return null;
   const { fbUser } = useAuth();
   const [isOpenSidebar, setIsOpenSidebar] = useRecoilState(
     isOpenSidebarState
