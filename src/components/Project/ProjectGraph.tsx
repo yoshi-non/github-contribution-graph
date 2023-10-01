@@ -1,5 +1,5 @@
 import { ShowUserType } from '@/types/ShowUserType';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProjectGraphCard from '../ProjectGraphCard';
 import ProjectShowUsersCard from '../ProjectShowUsersCard';
 import { useGithubUsers } from '@/hooks/useGithubUsers';

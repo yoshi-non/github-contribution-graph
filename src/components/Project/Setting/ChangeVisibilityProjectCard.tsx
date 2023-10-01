@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useState } from 'react';
 import DoneIcon from '@mui/icons-material/Done';
+import { Tooltip } from '@mui/material';
 
 const styles = {
   container: css`
@@ -126,9 +127,13 @@ const ChangeVisibilityProjectCard = ({
               <p>{pathName}</p>
               <button onClick={copyHandler}>
                 {isCopied ? (
-                  <DoneIcon />
+                  <Tooltip title="Copied" placement="top">
+                    <DoneIcon />
+                  </Tooltip>
                 ) : (
-                  <ContentCopyIcon />
+                  <Tooltip title="Copy" placement="top">
+                    <ContentCopyIcon />
+                  </Tooltip>
                 )}
               </button>
             </div>
