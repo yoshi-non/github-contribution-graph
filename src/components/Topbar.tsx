@@ -115,7 +115,7 @@ const Topbar = ({ mainPath, crrPath, isPublic }: Props) => {
       crrPath = '';
     }
     setProjectName(crrPath);
-  }, [fbUser, router, crrPath]);
+  }, [router, crrPath]);
 
   const updateProjectName = async (
     newProjectName: string
