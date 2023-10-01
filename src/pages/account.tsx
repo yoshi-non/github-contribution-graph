@@ -2,11 +2,9 @@ import AccountCard from '@/components/AccountCard';
 import Sidebar from '@/components/Sidebar';
 import SidebarTitle from '@/components/Sidebar/SidebarTitle';
 import Topbar from '@/components/Topbar';
-import { useAuth } from '@/context/auth';
+import AuthenticatedLayout from '@/layout/auth/AuthenticatedLayout';
 import { isOpenSidebarState } from '@/store/sidebarAtoms';
 import { css } from '@emotion/react';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 const styles = {
@@ -40,36 +38,25 @@ const styles = {
 };
 
 const Profile = () => {
-  const { fbUser, isLoading } = useAuth();
-  const router = useRouter();
-
   const [isOpenSidebar, setIsOpenSidebar] = useRecoilState(
     isOpenSidebarState
   );
 
-  useEffect(() => {
-    if (!isLoading && !fbUser) {
-      router.push('/');
-    }
-  }, [fbUser, isLoading, router]);
-
-  if (!fbUser || isLoading) {
-    return null;
-  }
-
   return (
-    <div css={styles.container}>
-      <div css={styles.topContent}>
-        <SidebarTitle />
-        <Topbar mainPath={'Account Setting'} />
-      </div>
-      <div css={styles.mainWrapper}>
-        {isOpenSidebar && <Sidebar />}
-        <div css={styles.profileWrapper}>
-          <AccountCard />
+    <AuthenticatedLayout>
+      <div css={styles.container}>
+        <div css={styles.topContent}>
+          <SidebarTitle />
+          <Topbar mainPath={'Account Setting'} />
+        </div>
+        <div css={styles.mainWrapper}>
+          {isOpenSidebar && <Sidebar />}
+          <div css={styles.profileWrapper}>
+            <AccountCard />
+          </div>
         </div>
       </div>
-    </div>
+    </AuthenticatedLayout>
   );
 };
 
