@@ -11,6 +11,7 @@ import InputColor from 'react-input-color';
 import { memberCountState } from '@/store/memberCountAtoms';
 import { useUpdateColor } from '@/hooks/useUpdateColor';
 import { githubUsers } from '@/types/GitHubApiType';
+import { Tooltip } from '@mui/material';
 
 const styles = {
   memberBody: css`
@@ -187,7 +188,9 @@ const ShowUser = ({ props }: Props) => {
             css={styles.deleteButton}
             onClick={() => deleteShowUser(showUser.id)}
           >
-            <DeleteForeverIcon />
+            <Tooltip title="Delete" placement="top">
+              <DeleteForeverIcon />
+            </Tooltip>
           </button>
         </div>
       )}
