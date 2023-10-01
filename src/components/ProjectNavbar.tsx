@@ -1,7 +1,7 @@
 import { useAuth } from '@/context/auth';
-import { projectSelectViewState } from '@/store/projectSelectViewAtoms';
+import { ProjectSelectView } from '@/types/ProjectSelectView';
 import { css } from '@emotion/react';
-import { useRecoilState } from 'recoil';
+import { Dispatch, SetStateAction } from 'react';
 
 const styles = {
   container: css`
@@ -33,13 +33,18 @@ const styles = {
 };
 
 type Props = {
+  projectSelectView: ProjectSelectView;
+  setProjectSelectView: Dispatch<
+    SetStateAction<ProjectSelectView>
+  >;
   ownerId?: string;
 };
 
-const ProjectNavbar = ({ ownerId }: Props) => {
-  const [projectSelectView, setProjectSelectView] =
-    useRecoilState(projectSelectViewState);
-
+const ProjectNavbar = ({
+  projectSelectView,
+  setProjectSelectView,
+  ownerId,
+}: Props) => {
   const { fbUser } = useAuth();
 
   return (

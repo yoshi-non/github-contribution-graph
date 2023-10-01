@@ -15,7 +15,12 @@ const styles = {
   `,
 };
 
-const Sidebar = () => {
+type Props = {
+  isPublic?: boolean;
+};
+
+const Sidebar = ({ isPublic }: Props) => {
+  if (isPublic) return null;
   return (
     <div css={styles.container}>
       <div css={styles.createButtonWrapper}>
