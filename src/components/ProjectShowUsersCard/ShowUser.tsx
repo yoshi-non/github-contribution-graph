@@ -159,6 +159,7 @@ const ShowUser = ({ props }: Props) => {
           <Link
             href={`https://github.com/${showUser.githubId}`}
             css={styles.githubUserLink}
+            target="_blank"
           >
             {githubUserList.find(
               (user) => user.id == showUser.githubId
