@@ -43,8 +43,7 @@ const styles = {
     color: #fff;
     transition: all 0.2s;
     &:hover {
-      background-color: #39d353;
-      color: #fff;
+      border: 2px solid #006d32;
     }
   `,
   copyWrapper: css`

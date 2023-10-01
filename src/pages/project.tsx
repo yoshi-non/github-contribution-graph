@@ -114,7 +114,10 @@ const Project = () => {
           )}
           {projectSelectView === 'race' && <ProjectRace />}
           {projectSelectView === 'setting' && (
-            <ProjectSetting projectId={projectId} />
+            <ProjectSetting
+              crrPath={fetchProject?.name}
+              projectId={projectId}
+            />
           )}
         </div>
       </div>
