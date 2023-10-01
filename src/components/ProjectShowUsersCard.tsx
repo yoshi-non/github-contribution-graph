@@ -169,7 +169,7 @@ const ProjectShowUsersCard = ({
       githubId: shapeGithubId,
       color: '#fff',
     };
-    createShowUserHandler(showUser, router);
+    await createShowUserHandler(showUser, router);
     setMemberCount(memberCount + 1);
     setAddMemberModalIsOpen(false);
     setGithubId('');
@@ -192,13 +192,13 @@ const ProjectShowUsersCard = ({
       return;
     }
 
-    githubIds.map((githubId: string) => {
+    githubIds.map(async (githubId: string) => {
       const showUser = {
         projectId: id as string,
         githubId: githubId,
         color: '#fff',
       };
-      createShowUserHandler(showUser, router);
+      await createShowUserHandler(showUser, router);
     });
     setMemberCount(memberCount + 1);
     setExportMemberModalIsOpen(false);
@@ -223,13 +223,13 @@ const ProjectShowUsersCard = ({
       return;
     }
 
-    githubIds.map((githubId: string) => {
+    githubIds.map(async (githubId: string) => {
       const showUser = {
         projectId: id as string,
         githubId: githubId,
         color: '#fff',
       };
-      createShowUserHandler(showUser, router);
+      await createShowUserHandler(showUser, router);
     });
     setMemberCount(memberCount + 1);
     setExportMemberModalIsOpen(false);
