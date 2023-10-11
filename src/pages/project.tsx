@@ -68,7 +68,7 @@ const Project = () => {
     isOpenSidebarState
   );
   const [projectSelectView, setProjectSelectView] =
-    useState<ProjectSelectView>('graph');
+    useState<ProjectSelectView>('race');
 
   useEffect(() => {
     const getProject = async () => {
@@ -112,7 +112,12 @@ const Project = () => {
               isPublic={isPublic}
             />
           )}
-          {projectSelectView === 'race' && <ProjectRace />}
+          {projectSelectView === 'race' && (
+            <ProjectRace
+              projectId={projectId}
+              isPublic={isPublic}
+            />
+          )}
           {projectSelectView === 'setting' && (
             <ProjectSetting
               crrPath={fetchProject?.name}
